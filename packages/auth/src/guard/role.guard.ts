@@ -10,9 +10,9 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { JwtService } from '@nestjs/jwt';
 import { I18nService } from 'nestjs-i18n';
 import { Request } from 'express';
-import { rolePermissionsMap } from 'src/constants/rolePermissionsMap.constant';
-import { Permission, Role } from 'src/constants/enum.constant';
-import { IJwtPayload, IUser } from 'src/interfaces/user.interface';
+import { rolePermissionsMap } from '../constants/rolePermissionsMap.constant';
+import { Permission, Role } from '../constants/enum.constant';
+import { IJwtPayload, IUser } from '../interfaces/user.interface';
 
 
 export interface IUserService {
