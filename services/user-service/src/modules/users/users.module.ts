@@ -1,8 +1,4 @@
-import {
-  NotificationModule,
-  UploadModule,
-  RedisModule,
-} from '@bts-soft/core';
+import { NotificationModule, UploadModule, RedisModule } from '@bts-soft/core';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserService } from './users.service';
@@ -16,6 +12,7 @@ import { NatsService } from 'src/common/nats/nats.service';
 import { UsersController } from './user.controller';
 import { NatsModule } from 'src/common/nats/nats.module';
 import { ConfigModule } from '@nestjs/config';
+import { AuthCommonModule } from '@course-plateform/common';
 
 @Module({
   imports: [
@@ -25,6 +22,7 @@ import { ConfigModule } from '@nestjs/config';
     NatsModule,
     UploadModule,
     ConfigModule,
+    AuthCommonModule.register({ userServiceToken: 'USER_SERVICE' }),
   ],
   providers: [
     UserService,
@@ -33,6 +31,10 @@ import { ConfigModule } from '@nestjs/config';
     NatsService,
     UserFacadeService,
     UserProfileLoader,
+    {
+      provide: 'USER_SERVICE',
+      useExisting: UserService,
+    },
   ],
   controllers: [UsersController],
   exports: [UserService, UserFacadeService, UserProxy, TypeOrmModule],

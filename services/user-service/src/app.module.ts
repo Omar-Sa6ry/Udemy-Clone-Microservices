@@ -16,7 +16,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-ConfigModule.forRoot({ isGlobal: true })   , GraphqlModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    GraphqlModule,
     ThrottlerModule,
     TranslationModule,
     TypeOrmModule.forRootAsync({
@@ -26,18 +27,15 @@ ConfigModule.forRoot({ isGlobal: true })   , GraphqlModule,
         type: 'postgres',
         host: configService.get<string>('DB_HOST'),
         port: configService.get<number>('DB_PORT'),
-        username: configService.get<string>('DB_USERNAME'),
-        password: configService.get<string>('DB_PASSWORD'),
-        database: configService.get<string>('DB_NAME_USER'),
-        entities: [User],
-        logging: ['error', 'warn', 'query'], // Logs queries in development
+        username: configService.get<string>('POSTGRES_USER'),
+        password: configService.get<string>('POSTGRES_PASSWORD'),
+        database: configService.get<string>('DB_NAME'),
+        autoLoadEntities: true,
         synchronize: true,
+        logging: ['error', 'warn', 'query'],
       }),
-
       async dataSourceFactory(options) {
-        if (!options) {
-          throw new Error('Invalid options passed');
-        }
+        if (!options) throw new Error('Invalid options passed');
         const dataSource = new DataSource(options);
         await dataSource.initialize();
         return addTransactionalDataSource(dataSource);

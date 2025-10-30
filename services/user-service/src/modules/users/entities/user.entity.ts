@@ -20,7 +20,6 @@ import {
 
 @ObjectType()
 @Entity('users')
-@Check(`("password" IS NOT NULL) OR ("googleId" IS NOT NULL)`)
 @Index(['email', 'id', 'phone'])
 export class User extends BaseEntity {
   @Field(() => String)

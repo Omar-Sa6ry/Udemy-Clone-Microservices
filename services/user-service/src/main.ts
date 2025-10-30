@@ -35,7 +35,7 @@ async function bootstrap() {
       await dataSource.initialize();
     }
 
-    await app.listen(process.env.PORT_USER || 3000);
+    await app.listen(process.env.PORT_USER || 3001);
   } catch (error) {
     console.error(error);
     throw new BadRequestException(error);

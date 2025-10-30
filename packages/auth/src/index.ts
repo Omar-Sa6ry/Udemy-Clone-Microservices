@@ -9,3 +9,6 @@ export * from './decorators/currentUser.decorator';
 export * from './constants/enum.constant';
 export * from './constants/rolePermissionsMap.constant';
 export * from './constants/messages.constant';
+
+// Auth common Module
+export * from './modules/auth.module';

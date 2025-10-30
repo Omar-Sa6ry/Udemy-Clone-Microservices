@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-service
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - udemyclone.dev
+      secretName: udemyclone-tls
+  rules:
+    - host: udemyclone.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: user-srv
+                port:
+                  number: 3001

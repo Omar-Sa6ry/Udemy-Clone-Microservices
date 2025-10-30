@@ -4,6 +4,7 @@ import {
   Injectable,
   UnauthorizedException,
   Inject,
+  Optional,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
@@ -13,7 +14,6 @@ import { Request } from 'express';
 import { rolePermissionsMap } from '../constants/rolePermissionsMap.constant';
 import { Permission, Role } from '../constants/enum.constant';
 import { IJwtPayload, IUser } from '../interfaces/user.interface';
-
 
 export interface IUserService {
   findById(id: string): Promise<IUser>;
@@ -25,14 +25,17 @@ export class RoleGuard implements CanActivate {
     private readonly i18n: I18nService,
     private readonly jwtService: JwtService,
     private readonly reflector: Reflector,
-    @Inject('USER_SERVICE')
-    private readonly userService: IUserService,
+    @Optional() @Inject('USER_SERVICE') private readonly userService?: IUserService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    if (!this.userService) {
+      throw new Error('USER_SERVICE not provided in AuthCommonModule context');
+    }
+
     const ctx = GqlExecutionContext.create(context);
     const request = ctx.getContext().req;
-    
+
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
@@ -42,7 +45,7 @@ export class RoleGuard implements CanActivate {
     const requiredRoles = this.getRequiredRoles(context);
     const requiredPermissions = this.getRequiredPermissions(context);
 
-    const payload = await this.verifyToken(token) as IJwtPayload;
+    const payload = (await this.verifyToken(token)) as IJwtPayload;
     const user = await this.userService.findById(payload.sub);
 
     const hasRole = this.validateRole(user.role as Role, requiredRoles);
