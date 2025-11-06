@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserProxy } from '../proxy/user.proxy';
 import { CacheObserver } from '../observer/user.observer';
 import { UserRoleContext } from '../state/user.state';
-import { RedisService, UploadService } from '@bts-soft/core';
+import { CreateImageDto, RedisService, UploadService } from '@bts-soft/core';
 import { UpdateUserInput } from '../inputs/UpdateUser.dto';
 import { UpdateProfileInput } from '../inputs/UpdateProfile.dto';
 import { ProfileFactory } from '../factories/profile.factory';
@@ -16,6 +16,8 @@ import { UserFactory } from '../factories/user.factory';
 import { Profile } from '../entities/profile.entity';
 import { ProfileResponse } from '../dtos/ProfileResponse.dto';
 import { Role } from '@course-plateform/common';
+import { CreateUserInput } from '../inputs/CreateUser.dto';
+import { CreateProfileInput } from '../inputs/CreateProfile.dto';
 
 @Injectable()
 export class UserFacadeService {
@@ -31,6 +33,29 @@ export class UserFacadeService {
     private readonly profileRepo: Repository<Profile>,
   ) {
     this.observers = new CacheObserver(this.redisService);
+  }
+
+  @Transactional()
+  async create(
+    createUserInput: CreateUserInput,
+    createProfileInput: CreateProfileInput,
+  ): Promise<UserResponse> {
+    const user = await this.userRepo.create(createUserInput);
+    await this.userRepo.save(user);
+
+    let avatar = null;
+    if (createProfileInput.avatar)
+      avatar = await this.handleAvatarUpload(createProfileInput.avatar);
+
+    const profile = await this.profileRepo.create({
+      ...createProfileInput,
+      avatar,
+      user,
+    });
+
+    await this.profileRepo.save(profile);
+
+    return { data: user };
   }
 
   @Transactional()
@@ -127,11 +152,29 @@ export class UserFacadeService {
     return { data: user };
   }
 
+  @Transactional()
+  async saveRole(role: Role, userId: string): Promise<UserResponse> {
+    const user = await this.userRepo.findOne({ where: { id: userId } });
+    if (!user)
+      throw new BadRequestException(await this.i18n.t('user.NOT_FOUND'));
+
+    user.role = role;
+    await this.userRepo.save(user);
+    await this.notifyUpdate(user);
+
+    return { data: user };
+  }
+
   private async notifyUpdate(user: User): Promise<void> {
     await this.observers.onUserUpdate(user);
   }
 
   private async notifyDelete(userId: string, email: string): Promise<void> {
     await this.observers.onUserDelete(userId, email);
+  }
+
+  private async handleAvatarUpload(avatar: CreateImageDto): Promise<string> {
+    const filename = await this.uploadService.uploadImage(avatar);
+    return typeof filename === 'string' ? filename : '';
   }
 }

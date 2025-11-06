@@ -58,6 +58,9 @@
   "dependencies": {
     "@bts-soft/core": "^1.9.4",
     "@course-plateform/common": "^1.0.0",
+    "@course-plateform/types": "^1.0.3",
+    "@nestjs/common": "^11.1.8",
+    "@nestjs/microservices": "^11.1.8",
     "@nestjs/typeorm": "^11.0.0",
     "pg": "^8.16.3"
   }

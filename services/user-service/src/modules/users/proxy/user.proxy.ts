@@ -163,13 +163,12 @@ export class UserProxy {
     email: string,
     phone: string,
     whatsapp: string,
-    nationalId: string,
-  ): Promise<void> {
+  ): Promise<{ exists: boolean; message: string }> {
     const cacheKey = `user:email:${email}`;
     const cachedUser = await this.redisService.get(cacheKey);
 
     if (cachedUser)
-      throw new BadRequestException(await this.i18n.t('user.EMAIL_EXISTED'));
+      return { exists: true, message: await this.i18n.t('user.EMAIL_EXISTED') };
 
     const [emailExised, phoneExised, whatsappExised] = await Promise.all([
       this.userRepo.findOne({ where: { email } }),
@@ -178,12 +177,15 @@ export class UserProxy {
     ]);
 
     if (emailExised)
-      throw new BadRequestException(await this.i18n.t('user.EMAIL_EXISTED'));
-
+      return { exists: true, message: await this.i18n.t('user.EMAIL_EXISTED') };
     if (phoneExised)
-      throw new BadRequestException(await this.i18n.t('user.PHONE_EXISTED'));
-
+      return { exists: true, message: await this.i18n.t('user.PHONE_EXISTED') };
     if (whatsappExised)
-      throw new BadRequestException(await this.i18n.t('user.WHTSAPP_EXISTED'));
+      return {
+        exists: true,
+        message: await this.i18n.t('user.WHTSAPP_EXISTED'),
+      };
+
+    return { exists: false, message: 'Not existed' };
   }
 }

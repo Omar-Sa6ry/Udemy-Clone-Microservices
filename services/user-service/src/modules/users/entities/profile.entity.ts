@@ -5,7 +5,7 @@ import {
   UrlField,
 } from '@bts-soft/core';
 import { ObjectType, Field } from '@nestjs/graphql';
-import { Entity, Column, OneToOne } from 'typeorm';
+import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
 import { User } from './user.entity';
 
 @ObjectType()
@@ -39,5 +39,6 @@ export class Profile extends BaseEntity {
   @OneToOne(() => User, (User) => User.profile, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn()
   user: User;
 }

@@ -60,7 +60,7 @@ export class User extends BaseEntity {
 
   @Field(() => Profile, { nullable: true })
   @OneToOne(() => Profile, (Profile) => Profile.user, {
-    onDelete: 'SET NULL',
+    cascade: true,
     nullable: true,
   })
   profile?: Profile;

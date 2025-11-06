@@ -12,10 +12,20 @@ spec:
     - host: udemyclone.dev
       http:
         paths:
-          - path: /
+          # user-service routes
+          - path: /user
             pathType: Prefix
             backend:
               service:
                 name: user-srv
                 port:
                   number: 3001
+
+          # auth-service routes
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-srv
+                port:
+                  number: 3002

@@ -142,4 +142,12 @@ export class UserService {
   async getUsersCount(): Promise<UserCountResponse> {
     return this.proxy.getUsersCount();
   }
+
+  async dataExisted(
+    email: string,
+    phone: string,
+    whatsapp: string,
+  ): Promise<{ exists: boolean; message: string }> {
+    return await this.proxy.dataExisted(email, phone, whatsapp);
+  }
 }

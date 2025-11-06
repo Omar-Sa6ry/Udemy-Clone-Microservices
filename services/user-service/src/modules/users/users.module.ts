@@ -9,10 +9,10 @@ import { UserProxy } from './proxy/user.proxy';
 import { Profile } from './entities/profile.entity';
 import { UserProfileLoader } from './loader/user.loader';
 import { NatsService } from 'src/common/nats/nats.service';
-import { UsersController } from './user.controller';
 import { NatsModule } from 'src/common/nats/nats.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthCommonModule } from '@course-plateform/common';
+import { UserNatsController } from './user.controller';
 
 @Module({
   imports: [
@@ -36,7 +36,7 @@ import { AuthCommonModule } from '@course-plateform/common';
       useExisting: UserService,
     },
   ],
-  controllers: [UsersController],
+  controllers: [UserNatsController],
   exports: [UserService, UserFacadeService, UserProxy, TypeOrmModule],
 })
 export class UserModule {}
