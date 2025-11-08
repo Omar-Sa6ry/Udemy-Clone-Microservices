@@ -29,3 +29,12 @@ spec:
                 name: auth-srv
                 port:
                   number: 3002
+
+          # category-service routes
+          - path: /category
+            pathType: Prefix
+            backend:
+              service:
+                name: category-srv
+                port:
+                  number: 3003

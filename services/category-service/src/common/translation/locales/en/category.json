@@ -1,0 +1,8 @@
+{
+  "CREATED": "Category ( {name} ) created successfully",
+  "UPDATED": "Category ( {name} ) updated successfully",
+  "DELETED": "Category ( {name} {id} ) deleted successfully",
+  "EXISTED": "Category ( {name} ) already exists",
+  "NOT_FOUND": "Category ( {name} {id} ) not found",
+  "NOT_FOUNDS": "Categories not found"
+}

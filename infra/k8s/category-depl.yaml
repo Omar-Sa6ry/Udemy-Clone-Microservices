@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: category-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: category
+  template:
+    metadata:
+      labels:
+        app: category
+    spec:
+      containers:
+        - name: category
+          image: udemyclone/category
+          ports:
+            - containerPort: 3002
+          env:
+            - name: DB_HOST
+              value: "category-db-srv"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: "udemy-category_service_dev"
+            - name: NODE_ENV
+              value: "development"
+            - name: JWT_EXPIRE
+              value: "36000s"
+            - name: NATS_URL
+              value: "nats://nats-srv:4222"
+          envFrom:
+            - secretRef:
+                name: user-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: category-srv
+spec:
+  selector:
+    app: category
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3003
+      targetPort: 3003

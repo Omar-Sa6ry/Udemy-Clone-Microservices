@@ -1,6 +1,6 @@
 {
   "name": "@course-plateform/types",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "types od udemy clone project",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
