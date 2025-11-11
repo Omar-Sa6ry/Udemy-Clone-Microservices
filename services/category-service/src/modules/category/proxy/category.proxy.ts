@@ -1,17 +1,18 @@
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Category } from '../entity/category.entity';
 import { I18nService } from 'nestjs-i18n';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   CategoriesResponse,
+  CategoryDto,
   CategoryResponse,
-} from '../dto/categoryResponse.dto';
+} from '@course-plateform/types';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Limit, Page } from '@course-plateform/common';
 import {
   CategoryExistsHandler,
   CategoryExistsHandlerByName,
 } from '../chain/category.chain';
-import { Limit, Page } from '@course-plateform/common';
 
 @Injectable()
 export class CategoryProxy {
@@ -64,5 +65,13 @@ export class CategoryProxy {
       throw new NotFoundException(await this.i18n.t('category.NOT_FOUNDS'));
 
     return { items: categories };
+  }
+
+  async findCategoriessWithIds(categoryIds: string[]): Promise<CategoryDto[]> {
+    const categories = await this.categoryRepository.find({
+      where: { id: In(categoryIds) },
+    });
+
+    return categories;
   }
 }

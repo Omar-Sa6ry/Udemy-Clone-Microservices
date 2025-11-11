@@ -5,10 +5,7 @@ import { Auth, Permission } from '@course-plateform/common';
 import { CreateCategoryInput } from './inputs/createCategoryr.input';
 import { CategoryIdInput, CategoryNameInput } from './inputs/category.input';
 import { UpdateCategoryInput } from './inputs/updateCategory.input';
-import {
-  CategoryResponse,
-  CategoriesResponse,
-} from './dto/categoryResponse.dto';
+import { CategoriesResponse, CategoryResponse } from '@course-plateform/types';
 
 @Resolver(() => Category)
 export class CategoryResolver {

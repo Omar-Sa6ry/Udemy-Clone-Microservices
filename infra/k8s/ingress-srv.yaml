@@ -38,3 +38,12 @@ spec:
                 name: category-srv
                 port:
                   number: 3003
+
+          # course-service routes
+          - path: /course
+            pathType: Prefix
+            backend:
+              service:
+                name: course-srv
+                port:
+                  number: 3004

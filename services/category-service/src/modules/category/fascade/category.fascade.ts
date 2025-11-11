@@ -8,11 +8,11 @@ import { UpdateCategoryInput } from '../inputs/updateCategory.input';
 import { CategoryProxy } from '../proxy/category.proxy';
 import { UpdateCategoryStrategy } from '../strategy/category.stategy';
 import { Injectable } from '@nestjs/common';
-import { CategoryResponse } from '../dto/categoryResponse.dto';
 import {
   CategoryExistsHandler,
   CategoryNameHandler,
 } from '../chain/category.chain';
+import { CategoryResponse } from '@course-plateform/types';
 
 @Injectable()
 export class CategoryFascade {
@@ -58,11 +58,11 @@ export class CategoryFascade {
     );
 
     existsHandler.setNext(nameHandler);
-    await existsHandler.handle(category, this.i18n);
+    await existsHandler.handle(category as Category, this.i18n);
 
     const updatedCategory = await this.updateStrategy.execute(
       updateCategoryInput,
-      category!,
+      category! as Category,
     );
     await this.categoryRepository.save(updatedCategory);
 

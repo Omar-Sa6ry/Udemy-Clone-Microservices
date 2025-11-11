@@ -34,3 +34,11 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: udemyclone/course
+      context: services/course-service
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .

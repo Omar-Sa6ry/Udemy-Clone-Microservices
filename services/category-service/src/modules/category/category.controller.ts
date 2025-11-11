@@ -1,3 +1,4 @@
+import { CategoryProxy } from 'src/modules/category/proxy/category.proxy';
 import { CategoryEvents } from '@course-plateform/types';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
@@ -6,7 +7,15 @@ import { CategoryIdInput, CategoryNameInput } from './inputs/category.input';
 
 @Controller()
 export class CategoryNatsController {
-  constructor(private readonly categoryService: CategoryService) {}
+  constructor(
+    private readonly categoryProxy: CategoryProxy,
+    private readonly categoryService: CategoryService,
+  ) {}
+
+  @MessagePattern(CategoryEvents.GET_CATEGORIES_BY_IDS)
+  async getCategoriesByIds(@Payload() data: { ids: string[] }) {
+    return await this.categoryProxy.findCategoriessWithIds(data.ids);
+  }
 
   @MessagePattern(CategoryEvents.GET_CATEGORY_BY_ID)
   async getCategoryById(@Payload() data: { id: CategoryIdInput }) {

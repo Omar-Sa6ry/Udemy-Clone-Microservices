@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: course-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: course
+  template:
+    metadata:
+      labels:
+        app: course
+    spec:
+      containers:
+        - name: course
+          image: udemyclone/course
+          ports:
+            - containerPort: 3004
+          env:
+            - name: NODE_ENV
+              value: "development"
+            - name: NATS_URL
+              value: "nats://nats-srv:4222"
+            - name: JWT_EXPIRE
+              value: "36000s"
+            - name: REDIS_HOST
+              value: "user-redis-srv"
+            - name: REDIS_PORT
+              value: "6379"
+          envFrom:
+            - secretRef:
+                name: course-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: course-srv
+spec:
+  selector:
+    app: course
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3004
+      targetPort: 3004

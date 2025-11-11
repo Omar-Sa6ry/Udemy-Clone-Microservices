@@ -5,7 +5,7 @@ import {
 } from '../dtos/UserResponse.dto';
 import { I18nService } from 'nestjs-i18n';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { User } from 'src/modules/users/entities/user.entity';
 import { RedisService } from '@bts-soft/core';
 import { Limit, Page, Role } from '@course-plateform/common';
@@ -132,13 +132,18 @@ export class UserProxy {
   }
 
   // For Anthor Serices
-  async checkIfInstractor(id: string): Promise<Boolean> {
+  async checkIfInstractor(
+    id: string,
+  ): Promise<{ exists: boolean; message: string }> {
     const user = (await this.findById(id))?.data;
 
     if (user.role !== Role.INSTRUCTOR)
-      throw new BadRequestException(await this.i18n.t('user.NOT_INSTRACTOR'));
+      return {
+        exists: false,
+        message: await this.i18n.t('user.NOT_INSTRACTOR'),
+      };
 
-    return true;
+    return { exists: true, message: 'Instractor' };
   }
 
   async phonenumberChecks(phone?: string, whatsapp?: string) {
@@ -187,5 +192,13 @@ export class UserProxy {
       };
 
     return { exists: false, message: 'Not existed' };
+  }
+
+  async findUsersWithIds(instructorIds: string[]): Promise<User[]> {
+    const instructors = await this.userRepo.find({
+      where: { id: In(instructorIds) },
+    });
+
+    return instructors;
   }
 }

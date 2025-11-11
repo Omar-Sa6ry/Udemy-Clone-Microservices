@@ -6,11 +6,13 @@ import { UserFacadeService } from './fascade/user.fascade';
 import { CreateUserInput } from './inputs/CreateUser.dto';
 import { CreateProfileInput } from './inputs/CreateProfile.dto';
 import { Role } from '@course-plateform/common';
+import { UserProxy } from './proxy/user.proxy';
 
 @Controller()
 export class UserNatsController {
   constructor(
     private readonly userFascade: UserFacadeService,
+    private readonly userProxy: UserProxy,
     private readonly userService: UserService,
   ) {}
 
@@ -60,6 +62,21 @@ export class UserNatsController {
     } catch {
       return { exists: false };
     }
+  }
+
+  @MessagePattern('user.checkIfInstractor')
+  async handleInstractorExisted(@Payload() data: { id: string }) {
+    try {
+      await this.userProxy.checkIfInstractor(data.id);
+      return { exists: true };
+    } catch {
+      return { exists: false };
+    }
+  }
+
+  @MessagePattern('user.findUsersWithIds')
+  async handlefindUsersWithIds(@Payload() data: { ids: string[] }) {
+    return await this.userProxy.findUsersWithIds(data.ids);
   }
 
   @MessagePattern('user.update_user')
