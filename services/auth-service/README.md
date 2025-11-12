@@ -1,99 +1,294 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Auth Service – Udemy Clone
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Overview
 
-## Description
+The **Auth Service** is a core microservice of the Udemy Clone platform, responsible for managing user authentication, registration, password management, and authorization using **NestJS**, **GraphQL**, **PostgreSQL**, **Redis**, and **NATS** for inter-service communication.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+It handles both **email/password** and **Google authentication**, ensures transactional consistency using **TypeORM Transactional Context**, and uses **Redis** for caching and session management.
 
-## Project setup
+---
 
-```bash
-$ npm install
+## Key Features
+
+- User registration and login (JWT-based)
+    
+- Role-based authentication (Admin, Instructor, Student)
+    
+- Password management (reset, change, forgot password)
+    
+- Email notifications for account actions
+    
+- Integration with **User Service** via **NATS microservice**
+    
+- Internationalization (i18n)
+    
+- Redis-based caching and token storage
+    
+- GraphQL API with real-time subscriptions
+    
+
+---
+
+## Technologies Used
+
+|Category|Technology|
+|---|---|
+|**Framework**|[NestJS](https://nestjs.com/)|
+|**Language**|TypeScript|
+|**Database**|PostgreSQL (via TypeORM)|
+|**Cache**|Redis|
+|**Communication**|NATS Messaging Queue|
+|**API**|GraphQL with Apollo Driver|
+|**Validation & i18n**|`nestjs-i18n`, `class-validator`|
+|**Transactions**|`typeorm-transactional`|
+|**Notifications**|Custom `NotificationService` (Email Channel)|
+
+---
+
+## Architecture
+
+The service follows a **Clean Architecture** and **DDD (Domain-Driven Design)** structure:
+
+```
+auth-service/
+├── src/
+│   ├── app.module.ts
+│   ├── main.ts
+│   ├── modules/
+│   │   └── auth/
+│   │       ├── entity/
+│   │       ├── inputs/
+│   │       ├── dtos/
+│   │       ├── adapters/
+│   │       ├── services/
+│   │       ├── commands/
+│   │       ├── builder/
+│   │       ├── state/
+│   │       ├── chain/
+│   │       ├── interfaces/
+│   │       └── resolvers/
+│   ├── modules/user/
+│   │   └── userClient.service.ts
+│   ├── nats/
+│   │   ├── nats.module.ts
+│   │   └── nats.service.ts
+│   └── ...
+└── package.json
 ```
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+## Environment Variables
 
-# watch mode
-$ npm run start:dev
+Create a `.env` file at the root of the service:
 
-# production mode
-$ npm run start:prod
+```env
+PORT_Auth=3002
+DB_HOST=localhost
+DB_PORT=5432
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+DB_NAME_AUTH=auth_service_db
+REDIS_URL=redis://localhost:6379
+NATS_URL=nats://localhost:4222
+JWT_SECRET=my_jwt_secret
 ```
 
-## Run tests
+---
+
+## Installation
 
 ```bash
-# unit tests
-$ npm run test
+# Install dependencies
+npm install
 
-# e2e tests
-$ npm run test:e2e
+# Generate GraphQL schema
+npm run build
 
-# test coverage
-$ npm run test:cov
+# Run database migrations (if enabled)
+npm run typeorm migration:run
+
+# Start the service
+npm run start:dev
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## GraphQL Endpoint
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Once the service is running, open the GraphQL Playground at:
 
-```bash
-$ npm install -g mau
-$ mau deploy
+```
+http://localhost:3002/auth/graphql
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Example Queries
 
-## Resources
+#### Register a new user
 
-Check out a few resources that may come in handy when working with NestJS:
+```graphql
+mutation Register {
+  register(
+    createUserInput: {
+      firstName: "omar"
+      lastName: "sabry"
+      email: "omarsabrydevgmail.com"
+      password: "Password123"
+      phone: "0123456789"
+      whatsapp: "0123456789"
+      headline: "Software Engineer"
+    }
+    profileInput: { bio: "Hello world", headline: "Developer" }
+  ) {
+    data {
+      user {
+        id
+        email
+        role
+      }
+      token
+    }
+    message
+  }
+}
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+#### Login
 
-## Support
+```graphql
+mutation Login {
+  login(loginDto: { email: "john@gmail.com", password: "Password123" }) {
+    data {
+      user {
+        id
+        email
+        role
+      }
+      token
+    }
+    message
+  }
+}
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+#### Forgot Password
 
-## Stay in touch
+```graphql
+mutation ForgotPassword {
+  forgotPassword(email: "john@gmail.com") {
+    message
+  }
+}
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+---
 
-## License
+## Microservice Communication (NATS)
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This service communicates with other microservices using **NATS**.
+
+### Example Events
+
+- `UserEvents.CREATE_USER_DATA`
+    
+- `UserEvents.GET_USER_BY_EMAIL`
+    
+- `UserEvents.USER_ROLE_UPDATED`
+    
+
+Communication is handled using the `NatsService` and `UserClientService` classes.
+
+---
+
+## Redis Caching
+
+- Stores temporary authentication and user data.
+    
+- Example keys:
+    
+    - `user:{userId}`
+        
+    - `user:email:{email}`
+        
+    - `auth:{email}`
+        
+    - `user-count`
+        
+
+Redis helps reduce load on the database and speeds up authentication flows.
+
+---
+
+## Password Management
+
+Password handling is abstracted using the **Strategy Pattern** via `PasswordServiceAdapter`:
+
+- Hashing and comparison use **bcrypt**.
+    
+- Secure password reset link generation handled by `PasswordResetLinkBuilder`.
+    
+- Reset states managed using the **State Pattern** (`PasswordResetContext`).
+    
+
+---
+
+## Email Notifications
+
+Email sending is command-based:
+
+- `SendWelcomeEmailCommand` → On successful registration
+    
+- `SendResetPasswordEmailCommand` → On password reset request
+    
+
+These commands use the `NotificationService` and `ChannelType.EMAIL`.
+
+---
+
+## Internationalization (i18n)
+
+All messages are localized using **nestjs-i18n**.
+
+Example messages file (`en/user.json`):
+
+```json
+{
+  "CREATED": "User signed up successfully",
+  "LOGIN": "User logged in successfully",
+  "UPDATED": "User updated successfully",
+  "NOT_FOUND": "User not found",
+  "EMAIL_WRONG": "Invalid email address",
+  "INVALID_PASSWORD": "Incorrect password"
+}
+```
+
+---
+
+## Scripts
+
+|Command|Description|
+|---|---|
+|`npm run start:dev`|Start development server|
+|`npm run build`|Build TypeScript project|
+|`npm run start:prod`|Start production server|
+|`npm run lint`|Run linter|
+|`npm run test`|Run unit tests|
+
+---
+
+## Folder Responsibilities
+
+|Folder|Description|
+|---|---|
+|**auth/entity**|TypeORM entities for authentication|
+|**auth/dtos**|Data Transfer Objects for GraphQL responses|
+|**auth/inputs**|GraphQL input schemas|
+|**auth/adapter**|Password service adapter (bcrypt implementation)|
+|**auth/builder**|Password reset link generator|
+|**auth/command**|Email command classes|
+|**auth/chain**|Password and role validators|
+|**auth/state**|Password reset states (initial, completed)|
+|**user/**|Handles NATS-based user communication|
+|**nats/**|NATS configuration and service layer|
+
