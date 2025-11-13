@@ -29,7 +29,7 @@ spec:
             - name: JWT_EXPIRE
               value: "36000s"
             - name: REDIS_HOST
-              value: "user-redis-srv"
+              value: "redis-srv"
             - name: REDIS_PORT
               value: "6379"
             - name: NATS_URL

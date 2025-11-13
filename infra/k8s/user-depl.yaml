@@ -27,7 +27,7 @@ spec:
             - name: NODE_ENV
               value: "development"
             - name: REDIS_HOST
-              value: "user-redis-srv"
+              value: "redis-srv"
             - name: REDIS_PORT
               value: "6379"
             - name: JWT_EXPIRE

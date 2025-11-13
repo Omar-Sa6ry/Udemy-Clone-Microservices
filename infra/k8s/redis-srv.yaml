@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-redis-depl
+  name: redis-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: user-redis
+      app: redis
   template:
     metadata:
       labels:
-        app: user-redis
+        app: redis
     spec:
       containers:
-        - name: user-redis
+        - name: redis
           image: redis:7-alpine
           imagePullPolicy: IfNotPresent
           ports:
@@ -22,7 +22,7 @@ spec:
             - name: REDIS_PORT
               value: "6379"
             - name: REDIS_HOST
-              value: "0.0.0.0"
+              value: "redis-srv"
           readinessProbe:
             tcpSocket:
               port: 6379
@@ -37,10 +37,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: user-redis-srv
+  name: redis-srv
 spec:
   selector:
-    app: user-redis
+    app: redis
   ports:
     - name: redis
       protocol: TCP
