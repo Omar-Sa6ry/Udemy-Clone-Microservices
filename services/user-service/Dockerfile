@@ -1,4 +1,4 @@
-FROM node:20.17.0
+FROM node:24.11.0
 
 WORKDIR /usr/src/app
 
@@ -12,7 +12,7 @@ CMD ["npm", "run", "start:dev"]
 
 
 # # Production image
-# FROM node:20.17.0
+# FROM node:24.11.0
 # WORKDIR /app
 # COPY --from=builder /app ./
 # CMD ["npm", "run", "start:dev"]
