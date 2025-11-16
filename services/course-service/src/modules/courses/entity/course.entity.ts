@@ -1,14 +1,14 @@
 import { ObjectType, Field, Float, Int } from '@nestjs/graphql';
 import { Entity, Column, ObjectIdColumn, Index, BaseEntity } from 'typeorm';
 import { CourseLevel } from '@course-plateform/common';
+import { ObjectId } from 'mongodb';
 
 @ObjectType()
 @Entity('courses')
 @Index(['title', 'price'])
 export class Course extends BaseEntity {
-  @Field(() => String)
   @ObjectIdColumn()
-  id: string;
+  _id: ObjectId;
 
   @Field(() => String)
   @Column()

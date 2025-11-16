@@ -15,6 +15,7 @@ import {
   CourseExistsByTitleHandler,
   CourseExistsHandler,
 } from '../chain/course.chain';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class CourseProxy {
@@ -27,10 +28,13 @@ export class CourseProxy {
 
   async findById(id: string): Promise<CourseResponse> {
     const cacheKey = `course:${id}`;
-    const cachedCourse = await this.redisService.get(cacheKey);
-    if (cachedCourse) return { data: cachedCourse as Course };
+    // const cachedCourse = await this.redisService.get(cacheKey);
+    // if (cachedCourse) return { data: cachedCourse as Course };
 
-    const course = await this.courseRepository.findOne({ where: { id } });
+    console.log(id)
+    const course = await this.courseRepository.findOne({
+      where: { _id: new ObjectId(id) },
+    });
 
     const existsHandler = new CourseExistsHandler(id);
     await existsHandler.handle(course, this.i18n);
@@ -41,13 +45,13 @@ export class CourseProxy {
 
   async findByTitle(title: string): Promise<CourseResponse> {
     const course = await this.courseRepository.findOne({
-      where: { title: ILike(`%${title}%`) },
+      where: { title },
     });
 
     const existsHandler = new CourseExistsByTitleHandler(title);
     await existsHandler.handle(course, this.i18n);
 
-    await this.redisService.set(`course:${course.id}`, course);
+    await this.redisService.set(`course:${course._id}`, course);
     return { data: course };
   }
 

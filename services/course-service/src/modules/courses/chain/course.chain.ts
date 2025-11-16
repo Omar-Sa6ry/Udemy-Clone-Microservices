@@ -3,6 +3,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Course } from '../entity/course.entity';
 import { ICourseHandler } from '../interfaces/ICourse.interface';
+import { ObjectId } from 'mongodb';
 
 export class CourseExistsHandler implements ICourseHandler {
   private nextHandler: ICourseHandler;
@@ -17,7 +18,9 @@ export class CourseExistsHandler implements ICourseHandler {
   async handle(course: Course | null, i18n: I18nService): Promise<void> {
     if (!course) {
       throw new NotFoundException(
-        await i18n.t('course.NOT_FOUND', { args: { id: this.id } }),
+        await i18n.t('course.NOT_FOUND', {
+          args: { id: new ObjectId(this.id) },
+        }),
       );
     }
 

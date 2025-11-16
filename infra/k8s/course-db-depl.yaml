@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: course-db-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: course-db
+  template:
+    metadata:
+      labels:
+        app: course-db
+    spec:
+      containers:
+        - name: course-db
+          image: mongo:6.0
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: course_admin
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: course_pass_123
+            - name: MONGO_INITDB_DATABASE
+              value: udemy-course_service_dev
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: mongo-storage
+              mountPath: /data/db
+      volumes:
+        - name: mongo-storage
+          persistentVolumeClaim:
+            claimName: course-db-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: course-db-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: course-db-srv
+spec:
+  selector:
+    app: course-db
+  ports:
+    - name: mongodb
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

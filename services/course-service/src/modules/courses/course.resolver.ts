@@ -5,13 +5,15 @@ import {
   Args,
   ResolveField,
   Parent,
+  Int,
 } from '@nestjs/graphql';
 import { CourseService } from './course.service';
 import { Course } from './entity/course.entity';
+import { CourseOrderBy } from 'src/common/constant/course.constant';
 import { CreateCourseInput } from './inputs/createCourse.input';
 import { CourseIdInput } from './inputs/courseId.input';
 import { UpdateCourseInput } from './inputs/updateCourse.input';
-import { Auth, Permission } from '@course-plateform/common';
+import { Limit, Page, Auth, Permission } from '@course-plateform/common';
 import { CourseDataLoaders } from './dataloaders/course.loader';
 import { CategoryDto, UserResponse } from '@course-plateform/types';
 import { FindCourseInput } from './inputs/findCourse.input';
@@ -45,47 +47,46 @@ export class CourseResolver {
     return this.courseService.update(updateCourseInput);
   }
 
-  @Auth([Permission.UPDATE_COURSE])
+  // @Auth([Permission.UPDATE_COURSE])
   @Mutation(() => CourseResponse)
-  async activationCourse(
-    @Args('id') id: CourseIdInput,
-  ): Promise<CourseResponse> {
-    return this.courseService.activate(id.courseId);
+  async activationCourse(@Args('id') id: string): Promise<CourseResponse> {
+    return this.courseService.activate(id);
   }
 
-  @Auth([Permission.UPDATE_COURSE])
+  // @Auth([Permission.UPDATE_COURSE])
   @Mutation(() => CourseResponse)
-  async deActivationCourse(
-    @Args('id') id: CourseIdInput,
-  ): Promise<CourseResponse> {
-    return this.courseService.deactivate(id.courseId);
+  async deActivationCourse(@Args('id') id: string): Promise<CourseResponse> {
+    return this.courseService.deactivate(id);
   }
 
   @Auth([Permission.DELETE_COURSE])
   @Mutation(() => CourseResponse)
-  async deleteCourse(@Args('id') id: CourseIdInput): Promise<CourseResponse> {
-    return this.courseService.delete(id.courseId);
+  async deleteCourse(@Args('id') id: string): Promise<CourseResponse> {
+    return this.courseService.delete(id);
   }
 
   @Query(() => CourseResponse)
-  async findCourseById(@Args('id') id: CourseIdInput): Promise<CourseResponse> {
-    return this.courseService.findById(id.courseId);
+  async findCourseById(@Args('id') id: string): Promise<CourseResponse> {
+    return this.courseService.findById(id);
   }
 
   @Query(() => CourseResponse)
   async findCourseByTitle(
-    @Args('title') title: CourseTitleInput,
+    @Args('title') title: string,
   ): Promise<CourseResponse> {
-    return this.courseService.findByTitle(title.title);
+    return this.courseService.findByTitle(title);
   }
 
   @Query(() => CoursesResponse)
   async findAllCourses(
-    @Args('findCourseInput', { nullable: true })
-    findCourseInput?: FindCourseInput,
-    @Args('page', { nullable: true }) page?: number,
-    @Args('limit', { nullable: true }) limit?: number,
-    @Args('orderby', { nullable: true }) orderby?: string,
+    @Args('findCourseInput') findCourseInput: FindCourseInput,
+    @Args('page', { type: () => Int, defaultValue: Page }) page: number,
+    @Args('limit', { type: () => Int, defaultValue: Limit }) limit: number,
+    @Args('orderby', {
+      type: () => CourseOrderBy,
+      defaultValue: CourseOrderBy.CREATED_AT,
+    })
+    orderby: CourseOrderBy,
   ): Promise<CoursesResponse> {
     return this.courseService.findAll(findCourseInput, page, limit, orderby);
   }

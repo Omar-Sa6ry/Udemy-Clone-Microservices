@@ -4,6 +4,7 @@ import { UpdateCourseInput } from '../inputs/updateCourse.input';
 import { ICourseStrategy } from '../interfaces/ICourseStratgy.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class UpdateCourseStrategy implements ICourseStrategy {
@@ -14,7 +15,7 @@ export class UpdateCourseStrategy implements ICourseStrategy {
 
   async execute(input: UpdateCourseInput): Promise<Course> {
     const course = await this.courseRepository.findOne({
-      where: { id: input.id },
+      where: { _id: new ObjectId(input.id) },
     });
 
     if (!course) {

@@ -23,9 +23,9 @@ export class DeleteMediaHandler implements ICourseHandler {
       if (course.promoVideoUrl)
         await this.uploadService.deleteVideo(course.promoVideoUrl);
 
-      console.log(`Media deleted for course: ${course.id}`);
+      console.log(`Media deleted for course: ${course._id}`);
     } catch (error) {
-      console.error(`Failed to delete media for course ${course.id}:`, error);
+      console.error(`Failed to delete media for course ${course._id}:`, error);
     }
 
     if (this.nextHandler) {

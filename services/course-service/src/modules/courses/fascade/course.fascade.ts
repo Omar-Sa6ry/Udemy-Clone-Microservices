@@ -12,6 +12,7 @@ import { DeleteMediaHandler } from '../chain/deleteMedia.chain';
 import { RedisService, UploadService } from '@bts-soft/core';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class CourseFascade {
@@ -53,6 +54,8 @@ export class CourseFascade {
   }
 
   async update(updateCourseInput: UpdateCourseInput): Promise<CourseResponse> {
+
+    console.log(updateCourseInput)
     const course = (await this.courseProxy.findById(updateCourseInput.id))
       ?.data;
 
@@ -70,7 +73,10 @@ export class CourseFascade {
 
     const updatedCourse = await this.updateStrategy.execute(updateCourseInput);
 
-    await this.redisService.update(`course:${updatedCourse.id}`, updatedCourse);
+    await this.redisService.update(
+      `course:${updatedCourse._id}`,
+      updatedCourse,
+    );
 
     return {
       data: updatedCourse,
@@ -91,7 +97,10 @@ export class CourseFascade {
       );
     }
 
-    await this.courseRepository.update({ id }, { isActive: true });
+    await this.courseRepository.update(
+      { _id: new ObjectId(id) },
+      { isActive: true },
+    );
 
     const courses = await this.courseRepository.count({
       where: { isActive: true },
@@ -117,7 +126,10 @@ export class CourseFascade {
       );
     }
 
-    await this.courseRepository.update({ id }, { isActive: false });
+    await this.courseRepository.update(
+      { _id: new ObjectId(id) },
+      { isActive: false },
+    );
 
     const courses = await this.courseRepository.count({
       where: { isActive: true },
@@ -133,7 +145,9 @@ export class CourseFascade {
   }
 
   async remove(id: string): Promise<CourseResponse> {
-    const course = await this.courseRepository.findOne({ where: { id } });
+    const course = await this.courseRepository.findOne({
+      where: { _id: new ObjectId(id) },
+    });
 
     const existsHandler = new CourseExistsHandler(id);
     const deleteMediaHandler = new DeleteMediaHandler(this.uploadService);
@@ -141,7 +155,7 @@ export class CourseFascade {
     existsHandler.setNext(deleteMediaHandler);
     await existsHandler.handle(course, this.i18n);
 
-    await this.courseRepository.delete({ id });
+    await this.courseRepository.delete({ _id: new ObjectId(id) });
 
     if (course.isActive) {
       const courses = await this.courseRepository.count({

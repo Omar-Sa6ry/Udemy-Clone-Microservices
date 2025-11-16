@@ -33,7 +33,7 @@ export class UserClientService {
           .pipe(timeout(10000)),
       );
 
-      if (result.exists) throw new BadRequestException(result.message);
+      if (!result.exists) throw new BadRequestException(result.message);
     } catch (error) {
       console.error('Error fetching user data existed:', error);
       throw error;

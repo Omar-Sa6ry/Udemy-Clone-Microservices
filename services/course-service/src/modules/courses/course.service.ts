@@ -61,7 +61,7 @@ export class CourseService {
     findCourseInput: FindCourseInput,
     page: number = Page,
     limit: number = Limit,
-    orderby: string = 'createdAt',
+    orderby: keyof Course = 'createdAt',
   ): Promise<CoursesResponse> {
     return this.courseProxy.findAll(findCourseInput, page, limit, orderby);
   }

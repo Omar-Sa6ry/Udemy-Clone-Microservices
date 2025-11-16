@@ -29,8 +29,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'mongodb',
-        url: configService.get<string>('MONGO_URI'),
-        useUnifiedTopology: true,
+        url: configService.get('MONGO_URI'),
         entities: [Course],
         autoLoadEntities: true,
         synchronize: true,
