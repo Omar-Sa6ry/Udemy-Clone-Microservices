@@ -17,6 +17,9 @@ import { Course } from './modules/courses/entity/course.entity';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SectionModule } from './modules/section/section.module';
+import { CourseSection } from './modules/section/entity/courseSection.entity';
+import { Lesson } from './modules/section/entity/lesson.entity';
 
 @Module({
   imports: [
@@ -30,7 +33,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       useFactory: (configService: ConfigService) => ({
         type: 'mongodb',
         url: configService.get('MONGO_URI'),
-        entities: [Course],
+        entities: [Course, CourseSection, Lesson],
         autoLoadEntities: true,
         synchronize: true,
         logging: ['error', 'warn', 'query'],
@@ -82,6 +85,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
 
     CourseModule,
+    SectionModule,
   ],
   providers: [
     AppService,

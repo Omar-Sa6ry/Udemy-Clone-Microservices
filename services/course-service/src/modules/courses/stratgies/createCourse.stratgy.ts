@@ -45,6 +45,7 @@ export class CreateCourseStrategy implements ICourseStrategy {
       totalLectures: input.totalLectures ? Number(input.totalLectures) : 0,
       imageUrl,
       promoVideoUrl,
+      sections: [],
     });
 
     return await this.courseRepository.save(course);

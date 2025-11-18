@@ -2,6 +2,7 @@ import { ObjectType, Field, Float, Int } from '@nestjs/graphql';
 import { Entity, Column, ObjectIdColumn, Index, BaseEntity } from 'typeorm';
 import { CourseLevel } from '@course-plateform/common';
 import { ObjectId } from 'mongodb';
+import { CourseSection } from 'src/modules/section/entity/courseSection.entity';
 
 @ObjectType()
 @Entity('courses')
@@ -85,6 +86,10 @@ export class Course extends BaseEntity {
   @Field(() => Boolean, { nullable: true })
   @Column({ default: true })
   isActive: boolean;
+
+  @Field(() => [CourseSection], { nullable: true })
+  @Column({ type: 'json', default: [] })
+  sections?: CourseSection[];
 
   @Field(() => Date)
   @Column({ default: () => new Date() })

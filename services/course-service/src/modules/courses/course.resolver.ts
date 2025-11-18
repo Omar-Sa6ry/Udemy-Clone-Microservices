@@ -47,13 +47,13 @@ export class CourseResolver {
     return this.courseService.update(updateCourseInput);
   }
 
-  // @Auth([Permission.UPDATE_COURSE])
+  @Auth([Permission.UPDATE_COURSE])
   @Mutation(() => CourseResponse)
   async activationCourse(@Args('id') id: string): Promise<CourseResponse> {
     return this.courseService.activate(id);
   }
 
-  // @Auth([Permission.UPDATE_COURSE])
+  @Auth([Permission.UPDATE_COURSE])
   @Mutation(() => CourseResponse)
   async deActivationCourse(@Args('id') id: string): Promise<CourseResponse> {
     return this.courseService.deactivate(id);

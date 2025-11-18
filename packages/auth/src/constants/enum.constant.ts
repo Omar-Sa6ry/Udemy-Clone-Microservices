@@ -29,8 +29,13 @@ export enum Permission {
   // Course
   CREATE_COURSE = 'create_course',
   UPDATE_COURSE = 'update_course',
-  VIEW_REQUEST_FOR_USER = 'view_request_for_user',
   DELETE_COURSE = 'delete_course',
+
+  // Section
+  CREATE_SECTION = 'create_section',
+  UPDATE_SECTION = 'update_section',
+  VIEW_REQUEST_FOR_USER = 'view_request_for_user',
+  DELETE_SECTION = 'delete_section',
 
   // Requests
   CREATE_REQUEST = 'create_request',

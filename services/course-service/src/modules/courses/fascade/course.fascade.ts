@@ -54,8 +54,6 @@ export class CourseFascade {
   }
 
   async update(updateCourseInput: UpdateCourseInput): Promise<CourseResponse> {
-
-    console.log(updateCourseInput)
     const course = (await this.courseProxy.findById(updateCourseInput.id))
       ?.data;
 

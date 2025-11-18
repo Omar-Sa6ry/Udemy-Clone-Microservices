@@ -1,0 +1,15 @@
+{
+  "NOT_INSTRACTOR": "You donot have this course",
+  "NOT_FOUND": "Course Section with ID {{id}} not found.",
+  "NOT_FOUND_BY_TITLE": "Course Section with title '{{title}}' not found.",
+  "NOT_FOUNDS": "No courses found.",
+  "EXISTED": "Course Section with title '{{title}}' already exists.",
+  "CREATED": "Course Section created successfully.",
+  "UPDATED": "Course Section '{{title}}' updated successfully.",
+  "DELETED": "Course Section with ID {{id}} deleted successfully.",
+  "COURSE_IS_ACTIVE": "Course Section {title} is active.",
+  "ALREADY_ACTIVE": "Course Section is already active.",
+  "ALREADY_INACTIVE": "Course Section is already inactive.",
+  "COURSE_IS_INACTIVE": "Course Section {title} is inactive.",
+  "COURSE_IS_ENDED": "Course Section {title} is ended."
+}
