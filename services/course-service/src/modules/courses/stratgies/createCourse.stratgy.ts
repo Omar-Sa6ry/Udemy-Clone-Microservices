@@ -4,9 +4,9 @@ import { Repository } from 'typeorm';
 import { Course } from '../entity/course.entity';
 import { CreateCourseInput } from '../inputs/createCourse.input';
 import { ICourseStrategy } from '../interfaces/ICourseStratgy.interface';
-import { UploadService } from '@bts-soft/core';
 import { UserClientService } from 'src/modules/user/userClient.service';
 import { CategoryClientService } from 'src/modules/category/categoryClient.service';
+import { UploadService } from '@bts-soft/upload';
 
 @Injectable()
 export class CreateCourseStrategy implements ICourseStrategy {

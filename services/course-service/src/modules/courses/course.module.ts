@@ -7,7 +7,7 @@ import { CourseFascade } from './fascade/course.fascade';
 import { CourseResolver } from './course.resolver';
 import { CreateCourseStrategy } from './stratgies/createCourse.stratgy';
 import { UpdateCourseStrategy } from './stratgies/updateCourse.stratgy';
-import { RedisModule, UploadModule } from '@bts-soft/core';
+import { RedisModule } from '@bts-soft/core';
 import { CourseNatsController } from './course.controller';
 import { AuthCommonModule } from '@course-plateform/common';
 import { NatsModule } from 'src/common/nats/nats.module';
@@ -15,6 +15,7 @@ import { UserClientService } from '../user/userClient.service';
 import { CategoryClientService } from '../category/categoryClient.service';
 import { NatsService } from 'src/common/nats/nats.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UploadModule } from '@bts-soft/upload';
 
 @Module({
   imports: [

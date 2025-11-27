@@ -4,7 +4,6 @@ import {
   // ConfigModule as Config,
   ThrottlerModule,
   TranslationModule,
-  HttpExceptionFilter,
 } from '@bts-soft/core';
 import { AppResolver } from './app.resolver';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -19,7 +18,11 @@ import { DataSource } from 'typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SectionModule } from './modules/section/section.module';
 import { CourseSection } from './modules/section/entity/courseSection.entity';
-import { Lesson } from './modules/section/entity/lesson.entity';
+import { Lesson } from './modules/lesson/entity/lesson.entity';
+import { LessonModule } from './modules/lesson/lesson.module';
+import { HttpExceptionFilter } from './common/filter/httpException.filter';
+
+
 
 @Module({
   imports: [
@@ -86,6 +89,7 @@ import { Lesson } from './modules/section/entity/lesson.entity';
 
     CourseModule,
     SectionModule,
+    LessonModule,
   ],
   providers: [
     AppService,

@@ -9,10 +9,11 @@ import { UpdateCourseInput } from '../inputs/updateCourse.input';
 import { CreateCourseStrategy } from '../stratgies/createCourse.stratgy';
 import { UpdateCourseStrategy } from '../stratgies/updateCourse.stratgy';
 import { DeleteMediaHandler } from '../chain/deleteMedia.chain';
-import { RedisService, UploadService } from '@bts-soft/core';
+import { RedisService } from '@bts-soft/core';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ObjectId } from 'mongodb';
+import { UploadService } from '@bts-soft/upload';
 
 @Injectable()
 export class CourseFascade {

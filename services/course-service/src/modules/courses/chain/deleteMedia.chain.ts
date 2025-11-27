@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 import { ICourseHandler } from '../interfaces/ICourse.interface';
 import { Course } from '../entity/course.entity';
-import { UploadService } from '@bts-soft/core';
+import { UploadService } from '@bts-soft/upload';
 
 @Injectable()
 export class DeleteMediaHandler implements ICourseHandler {

@@ -1,0 +1,15 @@
+{
+  "NOT_INSTRACTOR": "You donot have this course",
+  "NOT_FOUND": "lesson with ID {{id}} not found.",
+  "NOT_FOUND_BY_TITLE": "lesson with title '{{title}}' not found.",
+  "NOT_FOUNDS": "No courses found.",
+  "EXISTED": "lesson with title '{{title}}' already exists.",
+  "CREATED": "lesson created successfully.",
+  "UPDATED": "lesson '{{title}}' updated successfully.",
+  "DELETED": "lesson with ID {{id}} deleted successfully.",
+  "COURSE_IS_ACTIVE": "lesson {title} is active.",
+  "ALREADY_ACTIVE": "lesson is already active.",
+  "ALREADY_INACTIVE": "lesson is already inactive.",
+  "COURSE_IS_INACTIVE": "lesson {title} is inactive.",
+  "COURSE_IS_ENDED": "lesson {title} is ended."
+}

@@ -1,13 +1,8 @@
-import {
-  CapitalTextField,
-  CreateImageDto,
-  CreateVideoDto,
-  IdField,
-  TextField,
-} from '@bts-soft/core';
+import { CapitalTextField, IdField, TextField } from '@bts-soft/core';
 import { CourseLevel } from '@course-plateform/common';
 import { InputType, Field, Float } from '@nestjs/graphql';
 import { IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { CreateImageDto, CreateVideoDto } from '@bts-soft/upload';
 
 @InputType()
 export class CreateCourseInput {
@@ -52,11 +47,11 @@ export class CreateCourseInput {
 
   @IsOptional()
   @Field(() => CreateImageDto, { nullable: true })
-  image: CreateImageDto;
+  image?: CreateImageDto;
 
   @IsOptional()
   @Field(() => CreateVideoDto, { nullable: true })
-  demo_video: CreateVideoDto;
+  demo_video?: CreateVideoDto;
 
   @IsOptional()
   @Field(() => Boolean, { nullable: true })
