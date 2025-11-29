@@ -25,7 +25,9 @@ export class RoleGuard implements CanActivate {
     private readonly i18n: I18nService,
     private readonly jwtService: JwtService,
     private readonly reflector: Reflector,
-    @Optional() @Inject('USER_SERVICE') private readonly userService?: IUserService,
+    @Optional()
+    @Inject('USER_SERVICE')
+    private readonly userService?: IUserService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -36,7 +38,7 @@ export class RoleGuard implements CanActivate {
     const ctx = GqlExecutionContext.create(context);
     const request = ctx.getContext().req;
 
-    const token = this.extractTokenFromHeader(request);
+    const token = await this.extractTokenFromHeader(request);
 
     if (!token) {
       throw new UnauthorizedException(await this.i18n.t('user.NO_TOKEN'));

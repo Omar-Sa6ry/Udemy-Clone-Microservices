@@ -20,7 +20,7 @@ import { UploadModule } from '@bts-soft/upload';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Course]),
-    AuthCommonModule.register({ userServiceToken: 'COURSE_SERVICE' }),
+    AuthCommonModule.register({ userService: UserClientService }),
     NatsModule,
     RedisModule,
     UploadModule,

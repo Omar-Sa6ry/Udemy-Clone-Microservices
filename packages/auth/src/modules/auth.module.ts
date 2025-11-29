@@ -6,7 +6,7 @@ import { StringValue } from 'ms';
 
 @Module({})
 export class AuthCommonModule {
-  static register(options: { userServiceToken: string }): DynamicModule {
+  static register(options: { userService: any }): DynamicModule {
     return {
       module: AuthCommonModule,
       imports: [
@@ -18,8 +18,8 @@ export class AuthCommonModule {
       providers: [
         RoleGuard,
         {
-          provide: 'USER_SERVICE_TOKEN',
-          useValue: options.userServiceToken,
+          provide: 'USER_SERVICE',
+          useClass: options.userService,
         },
       ],
       exports: [RoleGuard, JwtModule],

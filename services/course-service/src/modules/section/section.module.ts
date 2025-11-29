@@ -17,7 +17,7 @@ import { NatsModule } from 'src/common/nats/nats.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([CourseSection]),
-    AuthCommonModule.register({ userServiceToken: 'SECTION_SERVICE' }),
+    AuthCommonModule.register({ userService: UserClientService }),
     CourseModule,
     RedisModule,
     NatsModule,
