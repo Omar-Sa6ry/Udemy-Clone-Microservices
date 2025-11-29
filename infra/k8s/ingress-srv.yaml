@@ -47,3 +47,12 @@ spec:
                 name: course-srv
                 port:
                   number: 3004
+
+          # certificate-service routes
+          - path: /certificate
+            pathType: Prefix
+            backend:
+              service:
+                name: certificate-srv
+                port:
+                  number: 3005

@@ -1,0 +1,9 @@
+{
+    "NOT_FOUND": "Certificate with ID {{id}} not found.",
+    "NOT_FOUNDS": "No certificates found.",
+    "EXISTED": "Certificate with title '{{title}}' already exists.",
+    "CREATED": "Certificate created successfully.",
+    "UPDATED": "Certificate '{{title}}' updated successfully.",
+    "DELETED": "Certificate with ID {id} deleted successfully.",
+    "DONOT_OWN_COURSE": "You don't own this course."
+}

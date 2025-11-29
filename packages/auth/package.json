@@ -1,6 +1,6 @@
 {
   "name": "@course-plateform/common",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "Common utilities, guards, decorators and constants for Udemy Clone",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

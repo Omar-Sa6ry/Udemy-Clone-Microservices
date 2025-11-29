@@ -42,3 +42,11 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: udemyclone/certificate
+      context: services/certificate-service
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
