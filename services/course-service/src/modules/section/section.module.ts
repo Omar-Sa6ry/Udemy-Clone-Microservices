@@ -13,11 +13,15 @@ import { CreateSectionStrategy } from './stratgies/createSection.stratgy';
 import { CourseModule } from '../courses/course.module';
 import { RedisModule } from '@bts-soft/core';
 import { NatsModule } from 'src/common/nats/nats.module';
+import { Course } from '../courses/entity/course.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([CourseSection]),
-    AuthCommonModule.register({ userService: UserClientService }),
+    TypeOrmModule.forFeature([CourseSection, Course]),
+    AuthCommonModule.register({
+      userService: UserClientService,
+      imports: [NatsModule],
+    }),
     CourseModule,
     RedisModule,
     NatsModule,

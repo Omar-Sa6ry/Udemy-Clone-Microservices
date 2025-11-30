@@ -11,7 +11,8 @@ import {
   INestApplication,
   ValidationPipe,
 } from '@nestjs/common';
-import { setupInterceptors, setupGraphqlUpload } from '@bts-soft/core';
+import { setupInterceptors } from '@bts-soft/core';
+import { setupGraphqlUpload } from '@bts-soft/upload';
 
 async function bootstrap() {
   try {

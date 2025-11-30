@@ -18,7 +18,10 @@ import {
 @Module({
   imports: [
     TypeOrmModule.forFeature([Category]),
-    AuthCommonModule.register({ userServiceToken: 'CATEGORY_SERVICE' }),
+    AuthCommonModule.register({
+      userService: UserClientService,
+      imports: [NatsModule],
+    }),
     NatsModule,
   ],
   providers: [

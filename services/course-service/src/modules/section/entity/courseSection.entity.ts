@@ -1,8 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Lesson } from 'src/modules/lesson/entity/lesson.entity';
-import { Column, ObjectId, ObjectIdColumn } from 'typeorm';
+import { Column, Entity, ObjectId, ObjectIdColumn } from 'typeorm';
 
 @ObjectType()
+@Entity()
 export class CourseSection {
   @Field(() => String)
   @ObjectIdColumn()

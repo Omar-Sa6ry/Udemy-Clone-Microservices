@@ -14,11 +14,16 @@ export class SectionProxy {
   ) {}
 
   async findById(findSectionInput: FindSectionInput): Promise<SectionResponse> {
-    const course = await this.courseProxy.findById(findSectionInput.courseId);
+    const course = await this.courseProxy.findById(
+      findSectionInput.courseId.toString(),
+    );
 
+    console.log(course, 'lklklk');
     const section = course.data.sections.find(
       (section) => section._id.toString() === findSectionInput.sectionId,
     );
+
+    console.log(section, 'lklklk');
 
     if (!section) throw new NotFoundException('Section not found');
 

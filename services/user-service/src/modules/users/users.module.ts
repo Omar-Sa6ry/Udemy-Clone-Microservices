@@ -1,4 +1,5 @@
-import { NotificationModule, UploadModule, RedisModule } from '@bts-soft/core';
+import { UploadModule, UploadService } from '@bts-soft/upload';
+import { NotificationModule, RedisModule } from '@bts-soft/core';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserService } from './users.service';
@@ -17,12 +18,20 @@ import { UserNatsController } from './user.controller';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, Profile]),
+    AuthCommonModule.register({
+      userService: UserService,
+      imports: [
+        TypeOrmModule.forFeature([User, Profile]),
+        NatsModule,
+        RedisModule,
+      ],
+      providers: [UserFacadeService, UserProxy, NatsService, UploadService],
+    }),
     NotificationModule,
     RedisModule,
     NatsModule,
     UploadModule,
     ConfigModule,
-    AuthCommonModule.register({ userServiceToken: 'USER_SERVICE' }),
   ],
   providers: [
     UserService,

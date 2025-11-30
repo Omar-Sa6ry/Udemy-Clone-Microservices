@@ -18,6 +18,8 @@ export class UserClientService {
       if (!result || !result.data)
         throw new Error('Invalid response from user microservice');
 
+      console.log('User fetched by id:', result);
+      console.log('User fetched by id:', result.data);
       return result.data;
     } catch (error) {
       console.error('Error fetching user by id:', error);

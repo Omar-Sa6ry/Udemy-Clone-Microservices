@@ -1,7 +1,7 @@
 import { Field, InputType } from '@nestjs/graphql';
+import { CreateImageDto } from '@bts-soft/upload';
 import {
   CapitalTextField,
-  CreateImageDto,
   EmailField,
   PasswordField,
   PhoneField,

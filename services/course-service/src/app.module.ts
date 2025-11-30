@@ -22,8 +22,6 @@ import { Lesson } from './modules/lesson/entity/lesson.entity';
 import { LessonModule } from './modules/lesson/lesson.module';
 import { HttpExceptionFilter } from './common/filter/httpException.filter';
 
-
-
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -59,6 +57,9 @@ import { HttpExceptionFilter } from './common/filter/httpException.filter';
         user: req.user,
         language: req.headers['accept-language'] || 'en',
       }),
+
+      maxFileSize: 1000000000, // 1GB
+      maxFiles: 6,
 
       playground: true,
       debug: false,

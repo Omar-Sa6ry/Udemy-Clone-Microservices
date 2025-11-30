@@ -6,8 +6,9 @@ import { I18nValidationException } from 'nestjs-i18n';
 import { AppModule } from './app.module';
 import { initializeTransactionalContext } from 'typeorm-transactional';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
-import { setupInterceptors, setupGraphqlUpload } from '@bts-soft/core';
+import { setupInterceptors } from '@bts-soft/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { setupGraphqlUpload } from '@bts-soft/upload';
 
 async function bootstrap() {
   try {

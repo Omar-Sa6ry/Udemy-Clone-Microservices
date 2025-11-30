@@ -5,14 +5,10 @@ import { firstValueFrom, timeout } from 'rxjs';
 
 @Injectable()
 export class UserClientService {
-  constructor(
-    @Inject('NATS_SERVICE') private readonly client: ClientProxy,
-  ) {}
+  constructor(@Inject('NATS_SERVICE') private readonly client: ClientProxy) {}
 
   async findById(id: string): Promise<UserResponse> {
     try {
-
-
       const result = await firstValueFrom(
         this.client
           .send(UserEvents.GET_USER_BY_ID, { id })
@@ -21,7 +17,6 @@ export class UserClientService {
 
       if (!result || !result.data)
         throw new Error('Invalid response from user microservice');
-
 
       console.log('User fetched by id:', result);
       console.log('User fetched by id:', result.data);

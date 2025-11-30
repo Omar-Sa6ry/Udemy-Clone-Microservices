@@ -17,7 +17,7 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     app.enableCors();
 
-    setupGraphqlUpload(app as any, 1000000, 3);
+    setupGraphqlUpload(app as any, 1000000000, 5);
     setupInterceptors(app as any);
 
     app.useGlobalPipes(
@@ -55,6 +55,3 @@ async function bootstrap() {
 }
 
 bootstrap();
-
-
-

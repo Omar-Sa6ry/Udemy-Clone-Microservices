@@ -24,9 +24,10 @@ export class SectionResolver {
   @Mutation(() => SectionResponse)
   async createCourseSection(
     @CurrentUser() user: CurrentUserDto,
-    @Args('createCourseInput') createSectionInput: CreateSectionInput,
+    @Args('title') title: string,
+    @Args('courseId') courseId: string,
   ): Promise<SectionResponse> {
-    return this.sectionService.create(createSectionInput, user.id);
+    return this.sectionService.create({ title, courseId }, user.id);
   }
 
   @Auth([Permission.UPDATE_SECTION])

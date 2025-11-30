@@ -3,7 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { AuthUser } from './entity/auth.entity';
-import { NotificationModule, RedisModule, UploadModule } from '@bts-soft/core';
+import { NotificationModule, RedisModule } from '@bts-soft/core';
+import { UploadModule } from '@bts-soft/upload';
 import { UserClientService } from '../user/userCclient.service';
 import { AuthCommonModule } from '@course-plateform/common';
 import { ValidatorChain } from './chain/validator.chain';
@@ -20,7 +21,10 @@ import { NatsModule } from '../../common/nats/nats.module';
     NotificationModule,
     RedisModule,
     NatsModule,
-    AuthCommonModule.register({ userServiceToken: 'Auth_SERVICE' }),
+    AuthCommonModule.register({
+      userService: UserClientService,
+      imports: [NatsModule],
+    }),
   ],
   providers: [
     AuthResolver,

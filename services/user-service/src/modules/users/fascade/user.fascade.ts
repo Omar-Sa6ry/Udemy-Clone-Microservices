@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserProxy } from '../proxy/user.proxy';
 import { CacheObserver } from '../observer/user.observer';
 import { UserRoleContext } from '../state/user.state';
-import { CreateImageDto, RedisService, UploadService } from '@bts-soft/core';
+import { RedisService } from '@bts-soft/core';
 import { UpdateUserInput } from '../inputs/UpdateUser.dto';
 import { UpdateProfileInput } from '../inputs/UpdateProfile.dto';
 import { ProfileFactory } from '../factories/profile.factory';
@@ -18,6 +18,7 @@ import { ProfileResponse } from '../dtos/ProfileResponse.dto';
 import { Role } from '@course-plateform/common';
 import { CreateUserInput } from '../inputs/CreateUser.dto';
 import { CreateProfileInput } from '../inputs/CreateProfile.dto';
+import { UploadService, CreateImageDto } from '@bts-soft/upload';
 
 @Injectable()
 export class UserFacadeService {

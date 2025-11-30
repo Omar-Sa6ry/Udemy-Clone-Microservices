@@ -106,8 +106,8 @@ export class UserResolver {
     return await this.userService.editUserRole(id.UserId);
   }
 
-  @Query((returns) => UserResponse)
-  @Auth([Permission.CREATE_INSTRUCTOR])
+  @Mutation((returns) => UserResponse)
+  @Auth([Permission.EDIT_USER_ROLE])
   async createInstractor(@Args('id') id: UserIdInput): Promise<UserResponse> {
     return await this.userService.createInstructor(id.UserId);
   }

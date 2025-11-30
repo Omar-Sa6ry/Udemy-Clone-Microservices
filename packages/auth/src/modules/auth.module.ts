@@ -8,6 +8,7 @@ export class AuthCommonModule {
   static register(options: {
     userService: any;
     imports?: any[];
+    providers?: any[];
   }): DynamicModule {
     return {
       module: AuthCommonModule,
@@ -20,6 +21,7 @@ export class AuthCommonModule {
       ],
       providers: [
         RoleGuard,
+        ...(options.providers || []),
         {
           provide: 'USER_SERVICE',
           useClass: options.userService,

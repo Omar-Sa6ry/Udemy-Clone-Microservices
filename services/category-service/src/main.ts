@@ -7,7 +7,7 @@ import { I18nValidationException } from 'nestjs-i18n';
 import { AppModule } from './app.module';
 import { initializeTransactionalContext } from 'typeorm-transactional';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
-import { setupInterceptors, setupGraphqlUpload } from '@bts-soft/core';
+import { setupInterceptors } from '@bts-soft/core';
 
 async function bootstrap() {
   try {
@@ -16,7 +16,6 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     app.enableCors();
 
-    setupGraphqlUpload(app as any, 1000000, 2);
     setupInterceptors(app as any);
 
     app.useGlobalPipes(

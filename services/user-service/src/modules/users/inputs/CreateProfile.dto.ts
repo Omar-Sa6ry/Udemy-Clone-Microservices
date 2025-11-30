@@ -1,11 +1,7 @@
-import {
-  CapitalTextField,
-  CreateImageDto,
-  TextField,
-  UrlField,
-} from '@bts-soft/core';
+import { CapitalTextField, TextField, UrlField } from '@bts-soft/core';
 import { Field, InputType } from '@nestjs/graphql';
 import { IsOptional } from 'class-validator';
+import { CreateImageDto } from '@bts-soft/upload';
 
 @InputType()
 export class CreateProfileInput {

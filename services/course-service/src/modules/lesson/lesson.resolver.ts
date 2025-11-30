@@ -13,6 +13,7 @@ import { LessonResponse, LessonsResponse } from './dto/lessonResponse.dto';
 import { CreateLessonInput } from './inputs/createLesson.input';
 import { UpdateLessonInput } from './inputs/updateLesson.input';
 import { FindLessonInput } from './inputs/findLesson.input';
+import { CreateFileDto, CreateVideoDto } from '@bts-soft/upload';
 
 @Resolver(() => Lesson)
 export class LessonResolver {
@@ -22,9 +23,16 @@ export class LessonResolver {
   @Mutation(() => LessonResponse)
   async createLesson(
     @CurrentUser() user: CurrentUserDto,
-    @Args('createLessonInput') createLessonInput: CreateLessonInput,
+    @Args('file', { nullable: true }) file: CreateFileDto,
+    @Args('video', { nullable: true }) video: CreateVideoDto,
+    @Args('title') title: string,
+    @Args('courseId') courseId: string,
+    @Args('sectionId') sectionId: string,
   ): Promise<LessonResponse> {
-    return this.lessonService.create(createLessonInput, user.id);
+    return this.lessonService.create(
+      { title, courseId, sectionId, video, file },
+      user.id,
+    );
   }
 
   @Auth([Permission.UPDATE_SECTION])
