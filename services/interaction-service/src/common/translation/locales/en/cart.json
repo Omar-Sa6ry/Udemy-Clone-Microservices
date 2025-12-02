@@ -1,0 +1,15 @@
+{
+  "CREATED": "Cart created successfully",
+  "UPDATED": "Cart updated successfully",
+  "NOT_ENOUGH": "Not enough quantity",
+  "EMPTY": "Cart is empty",
+  "NOT_FOUND": "Cart {id} not found",
+  "QUANTITY_UPDATED": "Quantity updated successfully",
+  "DELETED_CART": "Cart {id} deleted successfully",
+  "NOT_ENOUGH_STOCK": "Not enough stock",
+  "CART_EMPTY": "Cart is empty",
+  "ALREADY_IN_CART": "Course {title} is already in the cart",
+  "CANNOT_DELETE": "You cannot delete this cart",
+  "ALREADY_ENROLLED": "You are already enrolled in the course {title}",
+  "ITEM_ADDED": "Item added to cart successfully"
+}

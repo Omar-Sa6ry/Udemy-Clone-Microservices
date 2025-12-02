@@ -50,3 +50,11 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: udemyclone/interaction
+      context: services/interaction-service
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .

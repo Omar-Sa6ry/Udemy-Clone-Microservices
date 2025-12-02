@@ -56,3 +56,12 @@ spec:
                 name: certificate-srv
                 port:
                   number: 3005
+
+          # interaction-service routes
+          - path: /interaction
+            pathType: Prefix
+            backend:
+              service:
+                name: interaction-srv
+                port:
+                  number: 3006
