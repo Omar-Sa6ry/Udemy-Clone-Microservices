@@ -18,6 +18,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Cart } from './modules/cart/entities/cart.entity';
 import { CartItem } from './modules/cart/entities/cartItem.enitty';
 import { CartModule } from './modules/cart/cart.module';
+import { Wishlist } from './modules/wishlist/entity/wishlist.entity';
+import { WishlistModule } from './modules/wishlist/wishlist.module';
 
 @Module({
   imports: [
@@ -35,7 +37,7 @@ import { CartModule } from './modules/cart/cart.module';
         username: configService.get<string>('POSTGRES_USER'),
         password: configService.get<string>('POSTGRES_PASSWORD'),
         database: configService.get<string>('DB_NAME_INTERACTION'),
-        entities: [Cart, CartItem],
+        entities: [Cart, CartItem, Wishlist],
         autoLoadEntities: true,
         synchronize: true,
         logging: ['error', 'warn', 'query'],
@@ -86,6 +88,7 @@ import { CartModule } from './modules/cart/cart.module';
     }),
 
     CartModule,
+    WishlistModule,
   ],
   providers: [
     AppService,
