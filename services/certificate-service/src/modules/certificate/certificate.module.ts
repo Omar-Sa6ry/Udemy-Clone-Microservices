@@ -11,6 +11,7 @@ import { UserClientService } from '../user/userClient.service';
 import { CourseClientService } from '../course/courseClient.service';
 import { AuthCommonModule } from '@course-plateform/common';
 import { NatsModule } from 'src/common/nats/nats.module';
+import { CertificateNatsController } from './certificate.controller';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { NatsModule } from 'src/common/nats/nats.module';
       useExisting: UserClientService,
     },
   ],
+  controllers: [CertificateNatsController],
   exports: [TypeOrmModule, CertificateProxy],
 })
 export class CertificateModule {}

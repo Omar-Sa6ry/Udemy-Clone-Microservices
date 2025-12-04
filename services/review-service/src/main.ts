@@ -39,13 +39,13 @@ async function bootstrap() {
       transport: Transport.NATS,
       options: {
         servers: [process.env.NATS_URL || 'nats://localhost:4222'],
-        queue: 'interaction-service',
+        queue: 'review-service',
       },
     });
 
     await app.startAllMicroservices();
 
-    await app.listen(process.env.PORT_INTERACTION || 3006);
+    await app.listen(process.env.PORT_REVIEW || 3007);
   } catch (error) {
     console.error(error);
     throw new BadRequestException(error);

@@ -24,15 +24,26 @@ export class CertificateProxy {
     private readonly certificateRepository: Repository<Certificate>,
   ) {}
 
-  async checkCertificate(userId: string, courseId: string): Promise<void> {
+  async checkCertificate(
+    userId: string,
+    courseId: string,
+  ): Promise<{ exists: boolean; message: string }> {
     const certificate = await this.certificateRepository.findOne({
       where: { userId, courseId },
     });
 
     if (certificate) {
       this.redisService.set(`certificate:${certificate.id}`, certificate);
-      throw new NotFoundException(await this.i18n.t('certificate.EXISTED'));
+      return {
+        exists: true,
+        message: 'existed',
+      };
     }
+
+    return {
+      exists: false,
+      message: await this.i18n.t('certificate.EXISTED'),
+    };
   }
 
   async findById(id: string): Promise<CertificateResponse> {

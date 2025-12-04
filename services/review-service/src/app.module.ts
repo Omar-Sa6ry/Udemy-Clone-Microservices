@@ -1,31 +1,54 @@
 import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
-import { UserModule } from './modules/users/users.module';
+import {
+  // ConfigModule as Config,
+  ThrottlerModule,
+  TranslationModule,
+} from '@bts-soft/core';
 import { AppResolver } from './app.resolver';
-import { addTransactionalDataSource } from 'typeorm-transactional';
-import { DataSource } from 'typeorm';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver } from '@nestjs/apollo';
 import { APP_FILTER } from '@nestjs/core';
 import { join } from 'path';
-import { Profile } from './modules/users/entities/profile.entity';
-import { User } from './modules/users/entities/user.entity';
-import {
-  HttpExceptionFilter,
-  ThrottlerModule,
-  TranslationModule,
-} from '@bts-soft/core';
+import { addTransactionalDataSource } from 'typeorm-transactional';
+import { DataSource } from 'typeorm';
+import { HttpExceptionFilter } from './common/filter/httpException.filter';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Review } from './modules/review/entity/review.entity';
+import { ReviewModule } from './modules/review/review.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     ThrottlerModule,
     TranslationModule,
+
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get<string>('POSTGRES_USER'),
+        password: configService.get<string>('POSTGRES_PASSWORD'),
+        database: configService.get<string>('DB_NAME_REVIEW'),
+        entities: [Review],
+        autoLoadEntities: true,
+        synchronize: true,
+        logging: ['error', 'warn', 'query'],
+      }),
+      async dataSourceFactory(options) {
+        if (!options) throw new Error('Invalid options passed');
+        const dataSource = new DataSource(options);
+        await dataSource.initialize();
+        return addTransactionalDataSource(dataSource);
+      },
+    }),
     GraphQLModule.forRoot({
       driver: ApolloDriver,
-      path: '/user/graphql',
+      path: '/review/graphql',
 
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       context: ({ req }) => ({
@@ -61,30 +84,7 @@ import {
       },
     }),
 
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get<string>('DB_HOST'),
-        port: configService.get<number>('DB_PORT'),
-        username: configService.get<string>('POSTGRES_USER'),
-        password: configService.get<string>('POSTGRES_PASSWORD'),
-        database: configService.get<string>('DB_NAME'),
-        entities: [Profile, User],
-        autoLoadEntities: true,
-        synchronize: true,
-        logging: ['error', 'warn', 'query'],
-      }),
-      async dataSourceFactory(options) {
-        if (!options) throw new Error('Invalid options passed');
-        const dataSource = new DataSource(options);
-        await dataSource.initialize();
-        return addTransactionalDataSource(dataSource);
-      },
-    }),
-
-    UserModule,
+    ReviewModule,
   ],
   providers: [
     AppService,

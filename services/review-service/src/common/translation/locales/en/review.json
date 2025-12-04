@@ -1,0 +1,9 @@
+{
+    "NOT_FOUND": "Review not found",
+    "NOT_FOUNDS": "Reviews not found",
+    "CREATED": "Review created successfully",
+    "UPDATED": "Review updated successfully",
+    "DELETED": "Review deleted successfully",
+    "EXISTED": "You have already reviewed this course",
+    "NOT_BUY_THIS_COURSE": "You have not bought this course"
+}

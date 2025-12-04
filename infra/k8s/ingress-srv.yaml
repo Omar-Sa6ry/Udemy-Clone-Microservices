@@ -65,3 +65,12 @@ spec:
                 name: interaction-srv
                 port:
                   number: 3006
+
+          # review-service routes
+          - path: /review
+            pathType: Prefix
+            backend:
+              service:
+                name: review-srv
+                port:
+                  number: 3007
