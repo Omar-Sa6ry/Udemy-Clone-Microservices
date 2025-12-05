@@ -7,3 +7,5 @@ export * from './types/certificate.type';
 // Dtos
 export * from './dtos/category.dto';
 export * from './dtos/course.dto';
+export * from './dtos/lesson.dto';
+export * from './dtos/findLesson.input';

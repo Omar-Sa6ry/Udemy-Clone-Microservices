@@ -1,0 +1,8 @@
+{
+  "CREATED": "Quiz is created sucessfully",
+  "EXISTED": "Quiz is Existed already",
+  "LESSON_NOT_FOUND": "Lesson Not Found",
+  "UPDATED": "Quiz updated sucessfully",
+  "DELETED": "Quiz deleted sucessfully",
+  "NOT_FOUND": "Quiz not Found"
+}

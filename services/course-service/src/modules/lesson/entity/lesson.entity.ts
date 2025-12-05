@@ -1,8 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongodb';
-import { Column, ObjectIdColumn } from 'typeorm';
+import { Column, Entity, ObjectIdColumn } from 'typeorm';
 
 @ObjectType()
+@Entity("lessons")
 export class Lesson {
   @Field(() => String)
   @ObjectIdColumn()

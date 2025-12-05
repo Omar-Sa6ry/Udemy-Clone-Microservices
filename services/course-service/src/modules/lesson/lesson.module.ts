@@ -15,6 +15,7 @@ import { CreateLessonStrategy } from './stratgies/createLesson.stratgy';
 import { UpdateLessonStrategy } from './stratgies/updateLesson.stratgy';
 import { SectionModule } from '../section/section.module';
 import { UploadModule } from '@bts-soft/upload';
+import { LessonController } from './lesson.controller';
 
 @Module({
   imports: [
@@ -43,5 +44,6 @@ import { UploadModule } from '@bts-soft/upload';
       useExisting: UserClientService,
     },
   ],
+  controllers: [LessonController],
 })
 export class LessonModule {}

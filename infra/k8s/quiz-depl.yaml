@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quiz-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quiz
+  template:
+    metadata:
+      labels:
+        app: quiz
+    spec:
+      containers:
+        - name: quiz
+          image: udemyclone/quiz
+          ports:
+            - containerPort: 3002
+          env:
+            - name: DB_HOST
+              value: "quiz-db-srv"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: "udemy-quiz_service_dev"
+            - name: REDIS_HOST
+              value: "redis-srv"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: NODE_ENV
+              value: "development"
+            - name: JWT_EXPIRE
+              value: "36000s"
+            - name: NATS_URL
+              value: "nats://nats-srv:4222"
+          envFrom:
+            - secretRef:
+                name: user-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: quiz-srv
+spec:
+  selector:
+    app: quiz
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3006
+      targetPort: 3006
