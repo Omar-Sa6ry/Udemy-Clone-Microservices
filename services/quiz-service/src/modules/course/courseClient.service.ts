@@ -1,7 +1,7 @@
 import {
   CourseEvents,
   CourseDto,
-  Lesson,
+  LessonDto,
   FindLessonInput,
 } from '@course-plateform/types';
 import { Injectable, Inject, BadRequestException } from '@nestjs/common';
@@ -30,7 +30,7 @@ export class CourseClientService {
     }
   }
 
-  async findLessonById(findLessonInput: FindLessonInput): Promise<Lesson> {
+  async findLessonById(findLessonInput: FindLessonInput): Promise<LessonDto> {
     try {
       const result = await firstValueFrom(
         this.client

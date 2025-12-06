@@ -3,7 +3,7 @@ import { BaseResponse, PaginationInfo } from '@bts-soft/common';
 import { IsOptional } from 'class-validator';
 
 @ObjectType()
-export class Lesson {
+export class LessonDto {
   @Field(() => String)
   _id: string;
 
@@ -37,14 +37,14 @@ export class Lesson {
 
 @ObjectType()
 export class LessonResponse extends BaseResponse {
-  @Field(() => Lesson, { nullable: true })
-  data: Lesson;
+  @Field(() => LessonDto, { nullable: true })
+  data: LessonDto;
 }
 
 @ObjectType()
 export class LessonsResponse extends BaseResponse {
-  @Field(() => [Lesson], { nullable: true })
-  items: Lesson[];
+  @Field(() => [LessonDto], { nullable: true })
+  items: LessonDto[];
 
   @IsOptional()
   @Field(() => PaginationInfo, { nullable: true })
