@@ -1,99 +1,294 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Category Service - Udemy Clone
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Overview
+Category Service is a microservice in the Udemy Clone application that handles category management operations. It is built with NestJS, GraphQL, TypeORM, and PostgreSQL, following clean architecture principles and design patterns.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
+- Complete CRUD operations for categories
+- GraphQL API with queries and mutations
+- Microservice communication via NATS
+- Design patterns implementation (Strategy, Facade, Chain of Responsibility, Proxy)
+- Internationalization support
+- Transactional operations
+- Authentication and authorization
+- Pagination and filtering
 
-## Description
+## Tech Stack
+- **Framework**: NestJS
+- **GraphQL**: Apollo Server
+- **Database**: PostgreSQL with TypeORM
+- **Message Broker**: NATS
+- **Validation**: class-validator with i18n
+- **Design Patterns**: Strategy, Facade, Chain of Responsibility, Proxy
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
-```bash
-$ npm install
+## Project Structure
+```
+src/
+├── modules/
+│   └── category/
+│       ├── entity/              # Database entities
+│       ├── inputs/              # GraphQL input types
+│       ├── interfaces/          # TypeScript interfaces
+│       ├── chain/               # Chain of Responsibility handlers
+│       ├── strategy/            # Strategy pattern implementations
+│       ├── facade/              # Facade pattern
+│       ├── proxy/               # Proxy pattern
+│       ├── category.controller.ts
+│       ├── category.module.ts
+│       ├── category.resolver.ts
+│       └── category.service.ts
+├── common/
+│   └── nats/                    # NATS communication service
+└── app.module.ts
 ```
 
-## Compile and run the project
+## Architecture Patterns
 
-```bash
-# development
-$ npm run start
+### 1. Strategy Pattern
+- **CreateCategoryStrategy**: Handles category creation logic
+- **UpdateCategoryStrategy**: Handles category update logic
 
-# watch mode
-$ npm run start:dev
+### 2. Chain of Responsibility Pattern
+- **CategoryExistsHandler**: Validates category existence by ID
+- **CategoryExistsHandlerByName**: Validates category existence by name
+- **CategoryNameHandler**: Validates category name uniqueness
 
-# production mode
-$ npm run start:prod
+### 3. Facade Pattern
+- **CategoryFascade**: Provides simplified interface for complex category operations
+
+### 4. Proxy Pattern
+- **CategoryProxy**: Acts as intermediary for category repository operations
+
+## Installation
+
+### Prerequisites
+- Node.js 18+
+- PostgreSQL
+- NATS server
+- Docker (optional)
+
+### Steps
+1. Clone the repository
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+   
+3. Configure environment variables (create `.env` file):
+   ```
+   DB_HOST=localhost
+   DB_PORT=5432
+   POSTGRES_USER=your_username
+   POSTGRES_PASSWORD=your_password
+   DB_NAME_CATEGORY=category_db
+   NATS_URL=nats://localhost:4222
+   PORT_CATEGORY=3003
+   ```
+   
+4. Run database migrations (if applicable)
+5. Start the service:
+   ```bash
+   npm run start:dev
+   ```
+
+## API Endpoints
+
+### GraphQL Playground
+Access at: `http://localhost:3003/category/graphql`
+
+### Queries
+1. **Get All Categories** (with pagination):
+   ```graphql
+   query {
+     getAllCategories(page: 1, limit: 10) {
+       items {
+         id
+         name
+         description
+         createdAt
+       }
+       pagination {
+         totalItems
+         totalPages
+         currentPage
+       }
+     }
+   }
+   ```
+
+2. **Get All Categories Without Pagination**:
+   ```graphql
+   query {
+     getAllCategoriesWithoutPagingation {
+       items {
+         id
+         name
+         description
+         createdAt
+       }
+     }
+   }
+   ```
+
+3. **Get Category by ID**:
+   ```graphql
+   query {
+     getCategoryById(id: { categoryId: "category_id_here" }) {
+       data {
+         id
+         name
+         description
+         createdAt
+       }
+     }
+   }
+   ```
+
+4. **Get Category by Name**:
+   ```graphql
+   query {
+     getCategoryByName(name: { name: "category_name_here" }) {
+       data {
+         id
+         name
+         description
+         createdAt
+       }
+     }
+   }
+   ```
+
+### Mutations (Require Authentication)
+1. **Create Category**:
+   ```graphql
+   mutation {
+     createCategory(
+       createCategoryInput: { 
+         name: "Web Development", 
+         description: "Web development courses" 
+       }
+     ) {
+       success
+       message
+       data {
+         id
+         name
+         description
+         createdAt
+       }
+     }
+   }
+   ```
+
+2. **Update Category**:
+   ```graphql
+   mutation {
+     updateCategory(
+       id: { categoryId: "category_id_here" }
+       updateCategoryInput: { 
+         name: "Updated Name", 
+         description: "Updated description" 
+       }
+     ) {
+       success
+       message
+       data {
+         id
+         name
+         description
+         updatedAt
+       }
+     }
+   }
+   ```
+
+3. **Delete Category**:
+   ```graphql
+   mutation {
+     deleteCategory(id: { categoryId: "category_id_here" }) {
+       success
+       message
+     }
+   }
+   ```
+
+## Microservice Events
+The service listens for NATS events:
+- `GET_CATEGORIES_BY_IDS`: Get multiple categories by IDs
+- `GET_CATEGORY_BY_ID`: Get single category by ID
+- `GET_CATEGORY_BY_NAME`: Get single category by name
+
+## Database Schema
+```sql
+CREATE TABLE categories (
+    id VARCHAR(255) PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(200) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP
+);
 ```
 
-## Run tests
-
+## Docker
+To run with Docker:
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+docker build -t category-service .
+docker run -p 3003:3003 --env-file .env category-service
 ```
 
-## Deployment
+## Development
+### Available Scripts
+- `npm run start`: Start in production mode
+- `npm run start:dev`: Start in development mode with watch
+- `npm run test`: Run tests
+- `npm run test:watch`: Run tests in watch mode
+- `npm run build`: Build the application
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### Code Generation
+The service uses GraphQL code-first approach. Schema is automatically generated at `src/schema.gql`.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Dependencies
+### Main Dependencies
+- @nestjs/common: NestJS core framework
+- @nestjs/graphql: GraphQL integration
+- @nestjs/typeorm: TypeORM integration
+- typeorm: ORM for PostgreSQL
+- @nestjs/microservices: Microservices support
+- nats: NATS client
+- nestjs-i18n: Internationalization
+- typeorm-transactional: Transaction management
 
-```bash
-$ npm install -g mau
-$ mau deploy
-```
+### Dev Dependencies
+- @nestjs/cli: NestJS CLI tools
+- typescript: TypeScript compiler
+- ts-node: TypeScript execution
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Error Handling
+The service includes comprehensive error handling:
+- Validation errors with i18n support
+- Database transaction rollback
+- Microservice communication timeouts
+- Custom exceptions for business logic
 
-## Resources
+## Security
+- Input validation using class-validator
+- Authentication decorators (`@Auth`)
+- Permission-based authorization
+- SQL injection prevention through TypeORM
+- CORS enabled
 
-Check out a few resources that may come in handy when working with NestJS:
+## Monitoring & Logging
+- Database query logging
+- NATS communication logging
+- Error logging with stack traces
+- Request/response logging through interceptors
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## Contributing
+1. Follow the existing code structure and patterns
+2. Add tests for new features
+3. Update documentation
+4. Ensure internationalization support
+5. Follow TypeScript best practices
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
