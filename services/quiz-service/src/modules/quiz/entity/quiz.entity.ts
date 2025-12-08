@@ -1,6 +1,6 @@
 import { BaseEntity } from '@bts-soft/core';
 import { Field, Float, ObjectType } from '@nestjs/graphql';
-import { QuizQuestion } from 'src/modules/quizDetails/entity/question.entity';
+import { QuizQuestion } from 'src/modules/quizDetails/entities/question.entity';
 import { Entity, Column, Index, Unique, OneToMany } from 'typeorm';
 
 @ObjectType()

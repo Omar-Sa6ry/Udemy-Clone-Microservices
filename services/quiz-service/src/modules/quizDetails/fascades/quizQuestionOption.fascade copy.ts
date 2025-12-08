@@ -1,67 +1,60 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { QuizQuestionResponse } from '../dto/quizQuestiondto';
+import { QuizQuestionResponse } from '../dtos/quizQuestiondto';
 import { QuizProxy } from 'src/modules/quiz/proxy/quiz.proxy';
 import { I18nService } from 'nestjs-i18n';
 import { CreateQuizQuestionInput } from '../inputs/createQuizQuestion.input';
 import { Quiz } from 'src/modules/quiz/entity/quiz.entity';
-import { QuizQuestion } from '../entity/question.entity';
+import { QuizQuestion } from '../entities/question.entity';
+import {
+  QuizQuestionOptionResponse,
+  QuizQuestionOptionsResponse,
+} from '../dtos/quizOptionto';
+import { QuestionProxy } from '../proxy/quizQuestion.proxy';
+import { CreateQuizQuestionOptionInput } from '../inputs/createOption.input';
+import { QuizQuestionOption } from '../entities/option.entity';
 
 @Injectable()
-export class QuizDetailsFascade {
+export class QuizQuestionOptionFascade {
   constructor(
     private readonly i18n: I18nService,
     private readonly quizProxy: QuizProxy,
+    private readonly questionProxy: QuestionProxy,
 
     @InjectRepository(Quiz)
     private quizRepository: Repository<Quiz>,
     @InjectRepository(QuizQuestion)
     private questionRepository: Repository<QuizQuestion>,
-    // @InjectRepository(QuizQuestionOption)
-    // private optionRepository: Repository<QuizQuestionOption>,
+    @InjectRepository(QuizQuestionOption)
+    private optionRepository: Repository<QuizQuestionOption>,
     // @InjectRepository(QuizAttempt)
     // private attemptRepository: Repository<QuizAttempt>,
   ) {}
 
-  async addQuestionToQuiz(
-    createQuizQuestionInput: CreateQuizQuestionInput,
-  ): Promise<QuizQuestionResponse> {
-    const quiz = await this.quizProxy.getQuizById(
-      createQuizQuestionInput.quizId,
+  async addOptionsToQuestion(
+    createQuizQuestionOptionInput: CreateQuizQuestionOptionInput,
+  ): Promise<QuizQuestionOptionResponse> {
+    await this.questionProxy.getQuestionById(
+      createQuizQuestionOptionInput.questionId,
     );
-    const question = this.questionRepository.create(createQuizQuestionInput);
 
-    await this.questionRepository.save(question);
+    const option = await this.optionRepository.create(
+      createQuizQuestionOptionInput,
+    );
+
+    await this.optionRepository.save(option);
 
     return {
-      data: question,
+      data: option,
       statusCode: 201,
-      message: this.i18n.t('quiz.CREATED_QUESTION'),
+      message: this.i18n.t('quiz.CREATED_OPTIONS'),
     };
   }
-
-  //   async addOptionsToQuestion(
-  //     questionId: number,
-  //     options: any[],
-  //   ): Promise<QuizQuestionOption[]> {
-  //     const question = await this.questionRepository.findOne({
-  //       where: { id: questionId },
-  //     });
-
-  //     if (!question) {
-  //       throw new NotFoundException(`Question with ID ${questionId} not found`);
-  //     }
-
-  //     const optionEntities = options.map((option) =>
-  //       this.optionRepository.create({
-  //         ...option,
-  //         question_id: questionId,
-  //       }),
-  //     );
-
-  //     return await this.optionRepository.save(optionEntities);
-  //   }
 
   async submitQuizAttempt(
     userId: number,

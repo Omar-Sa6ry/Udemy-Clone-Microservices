@@ -2,7 +2,8 @@ import { BaseEntity } from '@bts-soft/core';
 import { QuestionType } from '@course-plateform/common';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Quiz } from 'src/modules/quiz/entity/quiz.entity';
-import { Entity, Column, ManyToOne, Index } from 'typeorm';
+import { Entity, Column, ManyToOne, Index, OneToMany } from 'typeorm';
+import { QuizQuestionOption } from './option.entity';
 
 @ObjectType()
 @Entity('quiz_questions')
@@ -32,9 +33,10 @@ export class QuizQuestion extends BaseEntity {
   @Field()
   position: number;
 
+  @Field()
+  @OneToMany(() => QuizQuestionOption, (option) => option.question)
+  options: QuizQuestionOption[];
+
   @ManyToOne(() => Quiz, (quiz) => quiz.questions, { onDelete: 'CASCADE' })
   quiz: Quiz;
-
-  //   @OneToMany(() => QuizQuestionOption, (option) => option.question)
-  //   options: QuizQuestionOption[];
 }

@@ -1,13 +1,13 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { QuizQuestionResponse } from '../dto/quizQuestiondto';
+import { QuizQuestionResponse } from '../dtos/quizQuestiondto';
 import { QuizProxy } from 'src/modules/quiz/proxy/quiz.proxy';
 import { I18nService } from 'nestjs-i18n';
 import { CreateQuizQuestionInput } from '../inputs/createQuizQuestion.input';
-import { QuizQuestion } from '../entity/question.entity';
+import { QuizQuestion } from '../entities/question.entity';
 import { UpdateQuestionInput } from '../inputs/updateQuizQuestion.input';
-import { QuestionProxy } from '../proxy/quizDetauls.proxy';
+import { QuestionProxy } from '../proxy/quizQuestion.proxy';
 
 @Injectable()
 export class QuizQuestionFascade {

@@ -2,7 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Expose } from 'class-transformer';
 import { IsOptional } from 'class-validator';
 import { BaseResponse, PaginationInfo } from '@bts-soft/core';
-import { QuizQuestion } from '../entity/question.entity';
+import { QuizQuestion } from '../entities/question.entity';
 
 @ObjectType()
 export class QuizQuestionResponse extends BaseResponse {

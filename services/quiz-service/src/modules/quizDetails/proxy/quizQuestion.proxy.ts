@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { QuizQuestionResponse } from '../dto/quizQuestiondto';
+import { QuizQuestionResponse } from '../dtos/quizQuestiondto';
 import { I18nService } from 'nestjs-i18n';
-import { QuizQuestion } from '../entity/question.entity';
+import { QuizQuestion } from '../entities/question.entity';
 
 @Injectable()
 export class QuestionProxy {
