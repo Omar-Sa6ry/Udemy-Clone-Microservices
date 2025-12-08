@@ -1,8 +1,9 @@
-// entities/quiz.entity.ts
 import { BaseEntity } from '@bts-soft/core';
-import { Field, Float } from '@nestjs/graphql';
-import { Entity, Column, Index, Unique } from 'typeorm';
+import { Field, Float, ObjectType } from '@nestjs/graphql';
+import { QuizQuestion } from 'src/modules/quizDetails/entity/question.entity';
+import { Entity, Column, Index, Unique, OneToMany } from 'typeorm';
 
+@ObjectType()
 @Entity('quizzes')
 @Index(['lessonId'])
 @Unique(['lessonId'])
@@ -27,12 +28,9 @@ export class Quiz extends BaseEntity {
   @Field(() => Float)
   passing_score: number;
 
-  //   // Relations
-  //   @ManyToOne(() => Lesson, lesson => lesson.quizzes)
-  //   lesson: Lesson;
-
-  //   @OneToMany(() => QuizQuestion, question => question.quiz)
-  //   questions: QuizQuestion[];
+  @Field()
+  @OneToMany(() => QuizQuestion, (question) => question.quiz)
+  questions: QuizQuestion[];
 
   //   @OneToMany(() => QuizAttempt, attempt => attempt.quiz)
   //   attempts: QuizAttempt[];

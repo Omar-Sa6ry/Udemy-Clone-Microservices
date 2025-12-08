@@ -1,8 +1,13 @@
 {
   "CREATED": "Quiz is created sucessfully",
+  "CREATED_QUESTION": "Quiz Question is created sucessfully",
+  "UPDATED_QUESTION": "Quiz Question is updated sucessfully",
+  "DELETED_QUESTION": "Quiz Question is deleted sucessfully",
   "EXISTED": "Quiz is Existed already",
   "LESSON_NOT_FOUND": "Lesson Not Found",
   "UPDATED": "Quiz updated sucessfully",
   "DELETED": "Quiz deleted sucessfully",
-  "NOT_FOUND": "Quiz not Found"
+  "NOT_FOUND": "Quiz not Found",
+  "NOT_FOUND_QUESTION": "Quiz Question not Found",
+  "EXISTED_QUESTION": "Question is already existed"
 }

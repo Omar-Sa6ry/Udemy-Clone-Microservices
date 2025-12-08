@@ -74,16 +74,15 @@ export enum CourseLevel {
   ALL = 'all',
 }
 
-export enum RequestStatus {
-  APPROVED = 'approved',
-  PENDING = 'pending',
-  REJECTED = 'rejected',
-  CANCELED = 'canceled',
+export enum QuestionType {
+  MULTIPLE_CHOICE = 'multiple_choice',
+  TRUE_FALSE = 'true_false',
+  SHORT_ANSWER = 'short_answer',
 }
 
-registerEnumType(RequestStatus, {
-  name: 'RequestStatus',
-  description: 'Detailed status of requests in the system',
+registerEnumType(QuestionType, {
+  name: 'QuestionType',
+  description: 'Detailed Question Types in the system',
 });
 
 registerEnumType(Permission, {
