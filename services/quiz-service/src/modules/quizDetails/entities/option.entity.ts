@@ -7,7 +7,7 @@ import { BaseEntity } from '@bts-soft/core';
 @Entity('quiz_question_options')
 @Index(['questionId'])
 export class QuizQuestionOption extends BaseEntity {
-  @Column()
+  @Column({ length: 26 })
   @Field(() => String)
   questionId: string;
 

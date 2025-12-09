@@ -8,11 +8,14 @@
   "LESSON_NOT_FOUND": "Lesson Not Found",
   "UPDATED": "Quiz updated sucessfully",
   "DELETED": "Quiz deleted sucessfully",
+  "MAX_ATTEMPS": "Maximum attempts reached for this quiz",
   "NOT_FOUND": "Quiz not Found",
   "NOT_FOUND_QUESTION": "Quiz Question not Found",
   "NOT_FOUND_OPTION": "Quiz Question Option not Found",
   "NOT_FOUND_OPTIONS": "Quiz Question Options not Found",
   "EXISTED_QUESTION": "Question is already existed",
   "DELETE_QUESTION_OPTION": "Quiz Option is deleted sucessfully",
-  "UPDATE_OPTIONS": "Quiz Option is updated sucessfully"
+  "UPDATE_OPTIONS": "Quiz Option is updated sucessfully",
+  "SUBMIT_QUIZ": "Submit Quiz Sucessfully",
+  "NO_ATTEMPS_FOUND": "Tere is no Attemps"
 }

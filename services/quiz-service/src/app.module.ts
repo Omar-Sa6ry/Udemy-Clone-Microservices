@@ -17,6 +17,10 @@ import { HttpExceptionFilter } from './common/filter/httpException.filter';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Quiz } from './modules/quiz/entity/quiz.entity';
 import { QuizModule } from './modules/quiz/quiz.module';
+import { QuizDetailsModule } from './modules/quizDetails/quizDetails.module';
+import { QuizAttempt } from './modules/quizDetails/entities/quizAttempts.entity';
+import { QuizQuestion } from './modules/quizDetails/entities/question.entity';
+import { QuizQuestionOption } from './modules/quizDetails/entities/option.entity';
 
 @Module({
   imports: [
@@ -34,7 +38,7 @@ import { QuizModule } from './modules/quiz/quiz.module';
         username: configService.get<string>('POSTGRES_USER'),
         password: configService.get<string>('POSTGRES_PASSWORD'),
         database: configService.get<string>('DB_NAME_QUIZ'),
-        entities: [Quiz],
+        entities: [Quiz, QuizAttempt, QuizQuestion, QuizQuestionOption],
         autoLoadEntities: true,
         synchronize: true,
         logging: ['error', 'warn', 'query'],
@@ -85,6 +89,7 @@ import { QuizModule } from './modules/quiz/quiz.module';
     }),
 
     QuizModule,
+    QuizDetailsModule,
   ],
   providers: [
     AppService,

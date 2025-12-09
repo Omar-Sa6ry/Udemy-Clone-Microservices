@@ -1,6 +1,7 @@
 import { BaseEntity } from '@bts-soft/core';
-import { Field, Float, ObjectType } from '@nestjs/graphql';
+import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { QuizQuestion } from 'src/modules/quizDetails/entities/question.entity';
+import { QuizAttempt } from 'src/modules/quizDetails/entities/quizAttempts.entity';
 import { Entity, Column, Index, Unique, OneToMany } from 'typeorm';
 
 @ObjectType()
@@ -22,16 +23,20 @@ export class Quiz extends BaseEntity {
 
   @Column({ default: 0 })
   @Field(() => Float)
-  time_limit: number;
+  timeLimit: number;
 
   @Column({ default: 70 })
   @Field(() => Float)
-  passing_score: number;
+  passingScore: number;
 
-  @Field()
+  @Field(() => Int)
+  @Column({ default: 1 })
+  maxAttempts: number;
+
+  @Field(() => [QuizQuestion], { nullable: true })
   @OneToMany(() => QuizQuestion, (question) => question.quiz)
   questions: QuizQuestion[];
 
-  //   @OneToMany(() => QuizAttempt, attempt => attempt.quiz)
-  //   attempts: QuizAttempt[];
+  @OneToMany(() => QuizAttempt, (attempt) => attempt.quiz)
+  attempts: QuizAttempt[];
 }

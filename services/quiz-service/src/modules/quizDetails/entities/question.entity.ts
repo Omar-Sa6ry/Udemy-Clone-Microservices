@@ -33,8 +33,8 @@ export class QuizQuestion extends BaseEntity {
   @Field()
   position: number;
 
-  @Field()
   @OneToMany(() => QuizQuestionOption, (option) => option.question)
+  @Field(() => [QuizQuestionOption], { nullable: true })
   options: QuizQuestionOption[];
 
   @ManyToOne(() => Quiz, (quiz) => quiz.questions, { onDelete: 'CASCADE' })

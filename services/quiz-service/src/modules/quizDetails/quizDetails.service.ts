@@ -1,137 +1,108 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { QuizQuestionFascade } from './fascades/quizQuestion.fascade';
+import { QuestionProxy } from './proxy/quizQuestion.proxy';
+import { QuizQuestionResponse } from './dtos/quizQuestiondto';
+import { CreateQuizQuestionInput } from './inputs/createQuizQuestion.input';
+import { UpdateQuestionInput } from './inputs/updateQuizQuestion.input';
+import { QuestionOptionProxy } from './proxy/questionOption.proxy';
+import { QuizQuestionOptionFascade } from './fascades/quizQuestionOption.fascade';
+import { QuizQuestionOptionInput } from './inputs/createAnswer.input';
+import { QuizAttemptFascade } from './fascades/quizAttempt.fascade';
+import { CreateQuizQuestionOptionInput } from './inputs/createOption.input';
+import { UpdateQuestionOptionInput } from './inputs/updateOption.input';
+import { QuizAttempsProxy } from './proxy/quizAttemps.proxy';
+import {
+  QuizAttemptResponse,
+  QuizAttemptsResponse,
+} from './dtos/quizAttempt.dto';
+import {
+  QuizQuestionOptionResponse,
+  QuizQuestionOptionsResponse,
+} from './dtos/quizOptionto';
 
 @Injectable()
 export class QuizDetailsService {
   constructor(
-    @InjectRepository(Quiz)
-    private quizRepository: Repository<Quiz>,
-    @InjectRepository(QuizQuestion)
-    private questionRepository: Repository<QuizQuestion>,
-    @InjectRepository(QuizQuestionOption)
-    private optionRepository: Repository<QuizQuestionOption>,
-    @InjectRepository(QuizAttempt)
-    private attemptRepository: Repository<QuizAttempt>,
+    private readonly questionProxy: QuestionProxy,
+    private readonly quizAttempsProxy: QuizAttempsProxy,
+    private readonly questionOptionProxy: QuestionOptionProxy,
+    private readonly quizAttemptFascade: QuizAttemptFascade,
+    private readonly quizQuestionFascade: QuizQuestionFascade,
+    private readonly quizQuestionOptionFascade: QuizQuestionOptionFascade,
   ) {}
 
-
-
-
-
-
-  async addQuestionToQuiz(quizId: number, data: any): Promise<QuizQuestion> {
-    const quiz = await this.getQuizById(quizId);
-    const question = this.questionRepository.create({
-      ...data,
-      quiz_id: quizId,
-    });
-    
-    return await this.questionRepository.save(question);
+  async getQuestionById(id: string): Promise<QuizQuestionResponse> {
+    return this.questionProxy.getQuestionById(id);
   }
 
-  async addOptionsToQuestion(questionId: number, options: any[]): Promise<QuizQuestionOption[]> {
-    const question = await this.questionRepository.findOne({
-      where: { id: questionId },
-    });
+  async getQuestionByQuestionText(
+    questionText: string,
+  ): Promise<QuizQuestionResponse> {
+    return this.questionProxy.getQuestionByQuestionText(questionText);
+  }
+  async addQuestionToQuiz(
+    createQuizQuestionInput: CreateQuizQuestionInput,
+  ): Promise<QuizQuestionResponse> {
+    return this.quizQuestionFascade.addQuestionToQuiz(createQuizQuestionInput);
+  }
 
-    if (!question) {
-      throw new NotFoundException(`Question with ID ${questionId} not found`);
-    }
+  async updateQuestionToQuiz(
+    updateQuestionInput: UpdateQuestionInput,
+  ): Promise<QuizQuestionResponse> {
+    return this.quizQuestionFascade.updateQuestionToQuiz(updateQuestionInput);
+  }
 
-    const optionEntities = options.map(option => 
-      this.optionRepository.create({
-        ...option,
-        question_id: questionId,
-      })
+  async deleteQuestionToQuiz(id: string): Promise<QuizQuestionResponse> {
+    return this.quizQuestionFascade.deleteQuestionToQuiz(id);
+  }
+  async getOptionById(id: string): Promise<QuizQuestionOptionResponse> {
+    return this.questionOptionProxy.getOptionById(id);
+  }
+
+  async getOptionsForQuestion(
+    questionId: string,
+  ): Promise<QuizQuestionOptionsResponse> {
+    return this.questionOptionProxy.getOptionsForQuestion(questionId);
+  }
+
+  async addOptionToQuestion(
+    createQuizQuestionOptionInput: CreateQuizQuestionOptionInput,
+  ): Promise<QuizQuestionOptionResponse> {
+    return this.quizQuestionOptionFascade.addOptionToQuestion(
+      createQuizQuestionOptionInput,
     );
-
-    return await this.optionRepository.save(optionEntities);
   }
 
-  async submitQuizAttempt(userId: number, quizId: number, answers: any[], timeSpent: number): Promise<QuizAttempt> {
-    const quiz = await this.getQuizById(quizId, true);
-    
-    // Check max attempts
-    const userAttempts = await this.attemptRepository.count({
-      where: { quiz_id: quizId, user_id: userId },
-    });
-
-    if (userAttempts >= quiz.max_attempts) {
-      throw new BadRequestException('Maximum attempts reached for this quiz');
-    }
-
-    // Calculate score
-    const score = await this.calculateScore(quiz, answers);
-
-    // Create attempt record
-    const attempt = this.attemptRepository.create({
-      quiz_id: quizId,
-      user_id: userId,
-      score,
-      time_spent: timeSpent,
-    });
-
-    return await this.attemptRepository.save(attempt);
+  async updateOptionToQuestion(
+    updateQuestionOptionInput: UpdateQuestionOptionInput,
+  ): Promise<QuizQuestionOptionResponse> {
+    return this.quizQuestionOptionFascade.updateOptionToQuestion(
+      updateQuestionOptionInput,
+    );
   }
 
-  private async calculateScore(quiz: Quiz, answers: any[]): Promise<number> {
-    let totalPoints = 0;
-    let earnedPoints = 0;
-
-    for (const question of quiz.questions) {
-      totalPoints += question.points;
-      const userAnswer = answers.find(a => a.question_id === question.id);
-
-      if (userAnswer) {
-        const isCorrect = await this.checkAnswer(question, userAnswer);
-        if (isCorrect) {
-          earnedPoints += question.points;
-        }
-      }
-    }
-
-    return totalPoints > 0 ? (earnedPoints / totalPoints) * 100 : 0;
+  async deleteOptionQuestionToQuiz(id: string): Promise<QuizQuestionResponse> {
+    return this.quizQuestionOptionFascade.deleteOptionQuestionToQuiz(id);
   }
 
-  private async checkAnswer(question: QuizQuestion, userAnswer: any): Promise<boolean> {
-    switch (question.question_type) {
-      case 'multiple_choice':
-        const correctOptions = question.options.filter(opt => opt.is_correct);
-        const userSelected = userAnswer.selected_option_ids || [];
-        
-        if (correctOptions.length !== userSelected.length) {
-          return false;
-        }
-
-        return correctOptions.every(correctOpt =>
-          userSelected.includes(correctOpt.id)
-        );
-
-      case 'true_false':
-        const correctOption = question.options.find(opt => opt.is_correct);
-        return correctOption && userAnswer.selected_option_ids?.[0] === correctOption.id;
-
-      case 'short_answer':
-        // For short answer, you might want more complex checking
-        const correctText = question.options.find(opt => opt.is_correct)?.option_text;
-        return correctText?.toLowerCase() === userAnswer.short_answer_text?.toLowerCase();
-
-      default:
-        return false;
-    }
+  async getUserAttempts(
+    userId: string,
+    quizId?: string,
+  ): Promise<QuizAttemptsResponse> {
+    return this.quizAttempsProxy.getUserAttempts(userId, quizId);
   }
 
-  async getUserAttempts(userId: number, quizId?: number): Promise<QuizAttempt[]> {
-    const where: any = { user_id: userId };
-    if (quizId) {
-      where.quiz_id = quizId;
-    }
-
-    return await this.attemptRepository.find({
-      where,
-      order: { created_at: 'DESC' },
-      relations: ['quiz'],
-    });
+  async submitQuizAttempt(
+    userId: string,
+    quizId: string,
+    answers: QuizQuestionOptionInput[],
+    timeSpent: number,
+  ): Promise<QuizAttemptResponse> {
+    return this.quizAttemptFascade.submitQuizAttempt(
+      userId,
+      quizId,
+      answers,
+      timeSpent,
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { Field, InputType, Float } from '@nestjs/graphql';
+import { Field, InputType, Float, Int } from '@nestjs/graphql';
 
 @InputType()
 export class CreateQuizInput {
@@ -18,8 +18,11 @@ export class CreateQuizInput {
   description: string;
 
   @Field(() => Float, { nullable: true, defaultValue: 0 })
-  time_limit?: number;
+  timeLimit?: number;
 
   @Field(() => Float, { nullable: true, defaultValue: 70 })
-  passing_score?: number;
+  passingScore?: number;
+
+  @Field(() => Int)
+  maxAttempts: number;
 }

@@ -31,5 +31,6 @@ import { CourseClientService } from '../course/courseClient.service';
       useExisting: UserClientService,
     },
   ],
+  exports: [QuizProxy],
 })
 export class QuizModule {}
