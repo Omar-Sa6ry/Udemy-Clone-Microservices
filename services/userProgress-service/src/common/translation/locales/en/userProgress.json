@@ -1,0 +1,6 @@
+{
+  "CREATED": "User Progress is created",
+  "UPDATED": "User Progress is updated",
+  "NOT_FOUND": "User Progress Not Found",
+  "EXISTED": "User Progress is already existed"
+}

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-progress-db-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-progress-db
+  template:
+    metadata:
+      labels:
+        app: user-progress-db
+    spec:
+      containers:
+        - name: user-progress-db
+          image: postgres:16
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: O9M1a8r5+=2004
+            - name: POSTGRES_DB
+              value: udemy-userProgress_service_dev
+
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-storage
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-progress-db-srv
+spec:
+  selector:
+    app: user-progress-db
+  ports:
+    - name: postgres
+      protocol: TCP
+      port: 5432
+      targetPort: 5432

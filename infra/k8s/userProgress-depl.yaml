@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-progress-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-progress
+  template:
+    metadata:
+      labels:
+        app: user-progress
+    spec:
+      containers:
+        - name: user-progress
+          image: udemyclone/user-progress
+          ports:
+            - containerPort: 3002
+          env:
+            - name: DB_HOST
+              value: 'user-progress-db-srv'
+            - name: DB_PORT
+              value: '5432'
+            - name: DB_NAME
+              value: 'udemy-userProgress_service_dev'
+            - name: NODE_ENV
+              value: 'development'
+            - name: JWT_EXPIRE
+              value: '36000s'
+            - name: NATS_URL
+              value: 'nats://nats-srv:4222'
+          envFrom:
+            - secretRef:
+                name: user-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-progress-srv
+spec:
+  selector:
+    app: user-progress
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3009
+      targetPort: 3009

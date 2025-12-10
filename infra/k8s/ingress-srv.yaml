@@ -83,3 +83,12 @@ spec:
                 name: quiz-srv
                 port:
                   number: 3008
+
+          # userProgress-service routes
+          - path: /user-progress
+            pathType: Prefix
+            backend:
+              service:
+                name: user-progress-srv
+                port:
+                  number: 3009
