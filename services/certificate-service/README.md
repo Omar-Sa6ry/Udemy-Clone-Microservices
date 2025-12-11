@@ -1,99 +1,344 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Certificate Service - Udemy Clone
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Overview
+Certificate Service is a microservice in the Udemy Clone application that handles certificate management for course completions. It manages the issuance, validation, and retrieval of certificates for users who have completed courses, with integration to user and course services.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
+- Certificate issuance for completed courses
+- Certificate validation and verification
+- Redis caching for performance optimization
+- Email notifications for certificate issuance
+- DataLoader implementation for efficient data fetching
+- GraphQL API with optimized queries
+- Microservice communication via NATS
+- Transactional operations
+- Authentication and authorization
+- Pagination and filtering
 
-## Description
+## Tech Stack
+- **Framework**: NestJS
+- **GraphQL**: Apollo Server
+- **Database**: PostgreSQL with TypeORM
+- **Cache**: Redis
+- **Message Broker**: NATS
+- **Email Notifications**: Integrated notification service
+- **Validation**: class-validator with i18n
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
-```bash
-$ npm install
+## Project Structure
+```
+src/
+├── modules/
+│   └── certificate/
+│       ├── entity/              # Database entities
+│       ├── inputs/              # GraphQL input types
+│       ├── dto/                 # Data Transfer Objects
+│       ├── dataLoader/          # DataLoader implementations
+│       ├── facade/              # Business logic facade
+│       ├── proxy/               # Data access proxy
+│       ├── certificate.controller.ts
+│       ├── certificate.module.ts
+│       ├── certificate.resolver.ts
+│       └── certificate.service.ts
+├── common/
+│   └── nats/                    # NATS communication service
+└── app.module.ts
 ```
 
-## Compile and run the project
+## Core Components
 
-```bash
-# development
-$ npm run start
+### 1. Certificate Entity
+- Represents certificate data with user and course references
+- Unique constraint on (userId, courseId) pairs
+- Indexed for optimized queries
 
-# watch mode
-$ npm run start:dev
+### 2. CertificateProxy
+- Handles data access with Redis caching
+- Validates certificate existence
+- Manages certificate retrieval with user and course data
+- Implements pagination and filtering
 
-# production mode
-$ npm run start:prod
+### 3. CertificateFascade
+- Orchestrates certificate creation and deletion
+- Sends email notifications
+- Manages Redis cache invalidation
+- Coordinates with user and course services
+
+### 4. CertificateLoader
+- Implements DataLoader pattern for N+1 query optimization
+- Batch loads user and course data
+- Request-scoped for optimal performance
+
+### 5. CertificateResolver
+- GraphQL resolver with field resolvers
+- Authentication and authorization
+- Query and mutation handlers
+
+## Installation
+
+### Prerequisites
+- Node.js 18+
+- PostgreSQL
+- Redis
+- NATS server
+- Docker (optional)
+
+### Steps
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Configure environment variables (create `.env` file):
+   ```
+   DB_HOST=localhost
+   DB_PORT=5432
+   POSTGRES_USER=your_username
+   POSTGRES_PASSWORD=your_password
+   DB_NAME_CERTIFICATE=certificate_db
+   NATS_URL=nats://localhost:4222
+   PORT_CERTIFICATE=3005
+   REDIS_HOST=localhost
+   REDIS_PORT=6379
+   ```
+4. Run database migrations (if applicable)
+5. Start the service:
+   ```bash
+   npm run start:dev
+   ```
+
+## API Endpoints
+
+### GraphQL Playground
+Access at: `http://localhost:3005/certificate/graphql`
+
+### Queries
+1. **Get Certificate by ID**:
+   ```graphql
+   query {
+     getCertificateById(id: { certificateId: "certificate_id_here" }) {
+       success
+       message
+       data {
+         id
+         createdAt
+         user {
+           id
+           name
+           email
+         }
+         course {
+           _id
+           title
+           description
+         }
+       }
+     }
+   }
+   ```
+
+2. **Get Certificates (with filtering)**:
+   ```graphql
+   query {
+     getCertificates(
+       findCertificateInput: { 
+         userId: "user_id_here",
+         courseId: "course_id_here"
+       },
+       page: 1,
+       limit: 10
+     ) {
+       success
+       message
+       items {
+         id
+         createdAt
+       }
+       pagination {
+         totalItems
+         totalPages
+         currentPage
+       }
+     }
+   }
+   ```
+
+3. **Get Certificates for Current User**:
+   ```graphql
+   query {
+     getCertificateByIdForUser {
+       success
+       message
+       items {
+         id
+         createdAt
+         course {
+           _id
+           title
+           description
+         }
+       }
+     }
+   }
+   ```
+
+### Mutations (Require Authentication)
+1. **Delete Certificate**:
+   ```graphql
+   mutation {
+     deleteCertificate(id: { certificateId: "certificate_id_here" }) {
+       success
+       message
+     }
+   }
+   ```
+
+## Microservice Events
+The service listens for NATS events:
+- `CHECK_CERTIFICATE_EXISTED`: Check if a certificate exists for a user and course
+
+## Database Schema
+```sql
+CREATE TABLE certificates (
+    id VARCHAR(255) PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id VARCHAR(255) NOT NULL,
+    course_id VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP,
+    UNIQUE(user_id, course_id)
+);
+
+CREATE INDEX idx_certificates_user_id ON certificates(user_id);
 ```
 
-## Run tests
+## External Service Integrations
 
+### User Service Integration
+- Fetches user details via NATS messages
+- Uses `UserEvents.GET_USER_BY_ID` and `UserEvents.GET_USER_BY_IDS`
+- Timeout handling for resilience
+
+### Course Service Integration
+- Fetches course details via NATS messages
+- Uses `CourseEvents.GET_COURSE_BY_ID` and `CourseEvents.GET_COURSES_BY_ID`
+- Error handling for service unavailability
+
+### Notification Service
+- Sends email notifications for certificate issuance
+- Uses `ChannelType.EMAIL` for notification delivery
+- Configurable notification templates
+
+## Caching Strategy
+
+### Redis Implementation
+- Certificate data cached with key: `certificate:{id}`
+- Cache invalidation on updates and deletions
+- Cache-aside pattern for read operations
+- TTL configuration for automatic expiry
+
+### DataLoader Optimization
+- Batch loading of user and course data
+- Request-scoped caching within GraphQL resolvers
+- Reduces N+1 query problems
+
+## Error Handling
+- Custom exceptions with i18n support
+- Validation errors for input data
+- Service communication timeouts
+- Database transaction rollback
+- Redis cache fallback mechanisms
+
+## Security
+- Authentication decorators (`@Auth`)
+- Permission-based authorization:
+  - `DELETE_CERTIFICATE`: Delete certificates
+  - `VIEW_CERTIFICATE`: View all certificates
+  - `VIEW_CERTIFICATE_FOR_USER`: View own certificates
+- Input validation using class-validator
+- SQL injection prevention through TypeORM
+
+## Performance Optimizations
+
+### 1. Caching
+- Redis for certificate data
+- DataLoader for batch queries
+- Efficient pagination implementation
+
+### 2. Database
+- Indexed columns for faster queries
+- Unique constraints for data integrity
+- Transactional operations for consistency
+
+### 3. Microservices
+- Async communication via NATS
+- Timeout handling for external calls
+- Circuit breaker pattern (implied)
+
+## Docker
+To run with Docker:
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+docker build -t certificate-service .
+docker run -p 3005:3005 --env-file .env certificate-service
 ```
 
-## Deployment
+## Development
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### Available Scripts
+- `npm run start`: Start in production mode
+- `npm run start:dev`: Start in development mode with watch
+- `npm run test`: Run tests
+- `npm run test:watch`: Run tests in watch mode
+- `npm run build`: Build the application
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Code Generation
+The service uses GraphQL code-first approach. Schema is automatically generated at `src/schema.gql`.
 
-```bash
-$ npm install -g mau
-$ mau deploy
-```
+## Dependencies
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Main Dependencies
+- @nestjs/common: NestJS core framework
+- @nestjs/graphql: GraphQL integration
+- @nestjs/typeorm: TypeORM integration
+- typeorm: ORM for PostgreSQL
+- @nestjs/microservices: Microservices support
+- nats: NATS client
+- nestjs-i18n: Internationalization
+- typeorm-transactional: Transaction management
+- dataloader: GraphQL DataLoader implementation
+- ioredis: Redis client
 
-## Resources
+### Dev Dependencies
+- @nestjs/cli: NestJS CLI tools
+- typescript: TypeScript compiler
+- ts-node: TypeScript execution
 
-Check out a few resources that may come in handy when working with NestJS:
+## Monitoring & Logging
+- Database query logging
+- NATS communication logging
+- Redis cache operations
+- Email notification tracking
+- Error logging with stack traces
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## Testing
+- Unit tests for services and resolvers
+- Integration tests for API endpoints
+- Mock external service dependencies
+- Test database transactions
+- Cache invalidation tests
 
-## Support
+## Contributing
+1. Follow the existing code structure and patterns
+2. Add tests for new features
+3. Update documentation
+4. Ensure internationalization support
+5. Follow TypeScript best practices
+6. Consider performance implications
+7. Maintain cache consistency
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## Notes
+- Certificates are automatically issued upon course completion
+- Each user can have only one certificate per course
+- Certificates cannot be modified once issued (only deleted)
+- Certificate data includes references to user and course for completeness
+- The service is designed for high concurrency with caching and batching
