@@ -82,3 +82,11 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: udemyclone/order
+      context: services/order-service
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .

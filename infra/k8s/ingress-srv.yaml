@@ -92,3 +92,12 @@ spec:
                 name: user-progress-srv
                 port:
                   number: 3009
+
+          # order-service routes
+          - path: /order
+            pathType: Prefix
+            backend:
+              service:
+                name: order-srv
+                port:
+                  number: 3010
